@@ -1,0 +1,299 @@
+"","Country","infant.mortality","gdp","Country_Code","internet_users_2010","internet_users_2011","region","fertility_rate","contraception"
+"1","Afghanistan",154,2848,"AFG",4,5,NA,NA,NA
+"2","Albania",32,863,"ALB",45,49,NA,NA,NA
+"3","Algeria",44,1531,"DZA",12.5,14,"Africa",3.81,52
+"4","American Samoa",NA,NA,"ASM",NA,NA,NA,NA,NA
+"5","American.Samoa",11,NA,NA,NA,NA,NA,NA,NA
+"6","Andorra",NA,NA,"AND",81,81,NA,NA,NA
+"7","Angola",124,355,"AGO",10,14.776,NA,NA,NA
+"8","Antigua",24,6966,NA,NA,NA,NA,NA,NA
+"9","Antigua and Barbuda",NA,NA,"ATG",80,82,NA,NA,NA
+"10","Argentina",22,8055,"ARG",40,47.704,NA,NA,NA
+"11","Armenia",25,354,"ARM",25,32,"Europe",1.7,22
+"12","Aruba",NA,NA,"ABW",42,57.06835805,NA,NA,NA
+"13","Australia",6,20046,"AUS",76,79,"Oceania",1.89,76
+"14","Austria",6,29006,"AUT",75.17,79.8,"Europe",1.42,71
+"15","Azerbaijan",33,321,"AZE",46,50,"Asia",2.3,17
+"16","Bahamas",14,12545,"BHS",43,65,"Americas",1.95,62
+"17","Bahrain",18,9073,"BHR",55,77,"Asia",2.97,53
+"18","Bangladesh",78,280,"BGD",3.7,5,"Asia",3.14,49
+"19","Barbados",9,7173,"BRB",70.2,71.7657,"Americas",1.73,55
+"20","Belarus",15,994,"BLR",31.8,39.6,"Europe",1.4,50
+"21","Belgium",7,26582,"BEL",75,78,"Europe",1.62,79
+"22","Belize",30,2569,"BLZ",14,NA,"Americas",3.66,47
+"23","Benin",84,391,"BEN",3.13,3.5,"Africa",5.83,16
+"24","Bermuda",NA,NA,"BMU",84.21,88.336,NA,NA,NA
+"25","Bhutan",104,166,"BTN",13.6,21,"Asia",5.89,19
+"26","Bolivia",66,909,"BOL",22.4,30,"Americas",4.36,45
+"27","Bosnia",13,271,NA,NA,NA,NA,NA,NA
+"28","Bosnia and Herzegovina",NA,NA,"BIH",52,60,NA,NA,NA
+"29","Botswana",56,3640,"BWA",6,7,"Africa",4.45,33
+"30","Brazil",42,4510,"BRA",40.65,45,"Americas",2.17,74
+"31","Brunei",9,16683,NA,NA,NA,NA,NA,NA
+"32","Brunei Darussalam",NA,NA,"BRN",53,56,NA,NA,NA
+"33","Bulgaria",16,1518,"BGR",46.23,51,NA,NA,NA
+"34","Burkina-Faso",NA,NA,NA,NA,NA,"Africa",6.57,8
+"35","Burkina Faso",NA,NA,"BFA",2.4,3,NA,NA,NA
+"36","Burkina.Faso",97,165,NA,NA,NA,NA,NA,NA
+"37","Burundi",114,205,"BDI",1,1.11,"Africa",6.28,9
+"38","Cambodia",102,130,"KHM",1.26,3.1,NA,NA,NA
+"39","Cameroon",58,627,"CMR",4.3,5,"Africa",5.3,16
+"40","Canada",6,18943,"CAN",80.3,83,"Americas",1.61,66
+"41","Cape Verde",NA,NA,"CPV",30,32,NA,NA,NA
+"42","Cape.Verde",41,994,NA,NA,NA,NA,NA,NA
+"43","Cayman Islands",NA,NA,"CYM",66,69.46594499,NA,NA,NA
+"44","Central-African-Rep",NA,NA,NA,NA,NA,"Africa",4.95,24
+"45","Central African Republic",NA,NA,"CAF",2,2.2,NA,NA,NA
+"46","Central.African.Rep",96,379,NA,NA,NA,NA,NA,NA
+"47","Chad",115,187,"TCD",1.7,1.9,NA,NA,NA
+"48","Channel Islands",NA,NA,"CHI",NA,NA,NA,NA,NA
+"49","Chile",13,4736,"CHL",45,53.8938,"Americas",2.44,30
+"50","China",38,582,"CHN",34.3,38.3,"Asia",1.8,83
+"51","Colombia",24,2215,"COL",36.5,40.4,"Americas",2.69,72
+"52","Comoros",82,367,"COM",5.1,5.5,"Africa",5.51,21
+"53","Congo",90,1008,NA,NA,NA,NA,NA,NA
+"54","Congo Dem. Rep.",NA,NA,"COD",0.72,1.2,NA,NA,NA
+"55","Congo Rep.",NA,NA,"COG",5,5.6,NA,NA,NA
+"56","Cook-Islands",NA,NA,NA,NA,NA,"Oceania",3.5,38
+"57","Cook.Islands",26,5432,NA,NA,NA,NA,NA,NA
+"58","Costa-Rica",NA,NA,NA,NA,NA,"Americas",2.95,75
+"59","Costa Rica",NA,NA,"CRI",36.5,42.12,NA,NA,NA
+"60","Costa.Rica",12,2696,NA,NA,NA,NA,NA,NA
+"61","Cote d«Ivoire",NA,NA,"CIV",2.1,2.2,NA,NA,NA
+"62","Croatia",10,4014,"HRV",60.32,70.71,NA,NA,NA
+"63","Cuba",9,1983,"CUB",15.9,23.23,"Americas",1.55,70
+"64","Curacao",NA,NA,"CUW",NA,NA,NA,NA,NA
+"65","Cyprus",7,11459,"CYP",52.99,57.68,NA,NA,NA
+"66","Czech-Republic",NA,NA,NA,NA,NA,"Europe",1.4,69
+"67","Czech Republic",NA,NA,"CZE",68.82,72.97,NA,NA,NA
+"68","Czech.Republic",9,4450,NA,NA,NA,NA,NA,NA
+"69","Dem-Rep-of-the-Congo",NA,NA,NA,NA,NA,"Africa",6.24,8
+"70","Dem.Rep.of.the.Congo",89,117,NA,NA,NA,NA,NA,NA
+"71","Denmark",7,33191,"DNK",88.72,90,"Europe",1.82,78
+"72","Djibouti",106,893,"DJI",6.5,7,NA,NA,NA
+"73","Dominica",NA,2831,"DMA",47.45,51.3135,NA,NA,NA
+"74","Dominican-Republic",NA,NA,NA,NA,NA,"Americas",2.8,64
+"75","Dominican Republic",NA,NA,"DOM",31.4,35.5,NA,NA,NA
+"76","Dominican.Republic",34,1508,NA,NA,NA,NA,NA,NA
+"77","East.Timor",135,NA,NA,NA,NA,NA,NA,NA
+"78","Ecuador",46,1565,"ECU",29.03,31.4,"Americas",3.1,57
+"79","Egypt",54,973,"EGY",30.2,38.69,"Africa",3.4,47
+"80","El-Salvador",NA,NA,NA,NA,NA,"Americas",3.09,53
+"81","El Salvador",NA,NA,"SLV",15.9,17.68859598,NA,NA,NA
+"82","El.Salvador",39,1660,NA,NA,NA,NA,NA,NA
+"83","Equatorial Guinea",NA,NA,"GNQ",6,NA,NA,NA,NA
+"84","Equatorial.Guinea",107,388,NA,NA,NA,NA,NA,NA
+"85","Eritrea",98,96,"ERI",5.4,6.2,"Africa",5.34,5
+"86","Estonia",12,2433,"EST",74.1,76.5,"Europe",1.3,70
+"87","Ethiopia",107,96,"ETH",0.75,1.1,"Africa",7,4
+"88","Faeroe Islands",NA,NA,"FRO",75.2,80.7321728,NA,NA,NA
+"89","Fiji",20,2593,"FJI",20,28,"Oceania",2.76,40
+"90","Finland",5,24453,"FIN",86.89,89.37,NA,NA,NA
+"91","France",7,26444,"FRA",80.1,79.58,"Europe",1.63,77
+"92","French Polynesia",NA,NA,"PYF",49,49,NA,NA,NA
+"93","French.Guiana",22,23530,NA,NA,NA,NA,NA,NA
+"94","French.Polynesia",10,19766,NA,NA,NA,NA,NA,NA
+"95","Gabon",85,5007,"GAB",7.23,8,NA,NA,NA
+"96","Gambia",122,321,"GMB",9.2,10.8703,"Africa",5.2,12
+"97","Gaza.Strip",37,NA,NA,NA,NA,NA,NA,NA
+"98","Georgia",23,343,"GEO",26.9,36.56,"Europe",1.9,17
+"99","Germany",6,29632,"DEU",82,83,"Europe",1.3,75
+"100","Ghana",73,397,"GHA",12.7,14.11,"Africa",5.28,20
+"101","Greece",8,8684,"GRC",44.4,53,NA,NA,NA
+"102","Greenland",NA,NA,"GRL",63,64,NA,NA,NA
+"103","Grenada",14,2485,"GRD",33.46,NA,NA,NA,NA
+"104","Guadeloupe",8,9145,NA,NA,NA,NA,NA,NA
+"105","Guam",10,NA,"GUM",NA,NA,NA,NA,NA
+"106","Guatemala",40,1392,"GTM",10.5,11.7274,"Americas",4.9,31
+"107","Guinea",124,442,"GIN",1,1.3,"Africa",6.61,2
+"108","Guinea-Bissau",NA,NA,"GNB",2.45,2.672,NA,NA,NA
+"109","Guinea.Bissau",132,131,NA,NA,NA,NA,NA,NA
+"110","Guyana",58,726,"GUY",29.9,32,NA,NA,NA
+"111","Haiti",82,386,"HTI",8.37,NA,"Americas",4.6,18
+"112","Honduras",35,697,"HND",11.09,15.9,"Americas",4.3,47
+"113","Hong-Kong",NA,NA,NA,NA,NA,"Asia",1.32,86
+"114","Hong Kong",NA,NA,"HKG",72,74.5,NA,NA,NA
+"115","Hong.Kong",5,22898,NA,NA,NA,NA,NA,NA
+"116","Hungary",14,4325,"HUN",53,59,"Europe",1.4,73
+"117","Iceland",5,26217,"ISL",95,95.02,NA,NA,NA
+"118","India",72,365,"IND",7.5,10.07,"Asia",3.07,41
+"119","Indonesia",48,1019,"IDN",10.92,18,"Oceania",2.63,55
+"120","Iran",39,1544,"IRN",16,21,"Asia",4.77,65
+"121","Iraq",95,11308,"IRQ",2.5,5,"Asia",5.25,14
+"122","Ireland",6,17419,"IRL",69.85,76.82,NA,NA,NA
+"123","Isle of Man",NA,NA,"IMN",NA,NA,NA,NA,NA
+"124","Israel",7,16738,"ISR",67.5,70,NA,NA,NA
+"125","Italy",7,19121,"ITA",53.68,56.8,NA,NA,NA
+"126","Ivory-Coast",NA,NA,NA,NA,NA,"Africa",5.1,11
+"127","Ivory.Coast",86,736,NA,NA,NA,NA,NA,NA
+"128","Jamaica",12,1779,"JAM",27.67,31.5,"Americas",2.44,62
+"129","Japan",4,41718,"JPN",78.21,79.53,"Oceania",1.48,59
+"130","Jordan",30,1228,"JOR",27.2,34.9,"Asia",5.13,35
+"131","Kazakhstan",34,995,"KAZ",31.6,45,"Asia",2.3,59
+"132","Kenya",65,330,"KEN",14,28,"Africa",4.85,33
+"133","Kiribati",65,654,"KIR",9.07,10,"Oceania",3.8,37
+"134","Korea-Dem-Peoples-Rep",NA,NA,NA,NA,NA,"Asia",2.1,62
+"135","Korea-Republic-of",NA,NA,NA,NA,NA,"Asia",1.65,79
+"136","Korea Dem. Rep.",NA,NA,"PRK",NA,NA,NA,NA,NA
+"137","Korea Rep.",NA,NA,"KOR",83.7,83.8,NA,NA,NA
+"138","Korea.Dem.Peoples.Rep",22,271,NA,NA,NA,NA,NA,NA
+"139","Korea.Republic.of",9,9736,NA,NA,NA,NA,NA,NA
+"140","Kosovo",NA,NA,"KSV",NA,NA,NA,NA,NA
+"141","Kuwait",14,15757,"KWT",61.4,74.2,"Asia",2.77,35
+"142","Kyrgyz Republic",NA,NA,"KGZ",18.4,20,NA,NA,NA
+"143","Kyrgyzstan",39,331,NA,NA,NA,"Asia",3.21,31
+"144","Lao PDR",NA,NA,"LAO",7,9,NA,NA,NA
+"145","Laos",86,359,NA,NA,NA,"Asia",6.69,19
+"146","Latvia",16,1764,"LVA",68.42,71.68,"Europe",1.4,47
+"147","Lebanon",29,3114,"LBN",43.68,52,NA,NA,NA
+"148","Lesotho",72,486,"LSO",3.86,4.2248,"Africa",4.86,23
+"149","Liberia",153,1124,"LBR",2.3,3,"Africa",6.33,6
+"150","Libya",56,5498,"LBY",14,16.9981,"Africa",5.92,40
+"151","Liechtenstein",NA,42416,"LIE",80,85,NA,NA,NA
+"152","Lithuania",13,1595,"LTU",62.12,65.05,"Europe",1.5,59
+"153","Luxembourg",6,35109,"LUX",90.62,90.89,NA,NA,NA
+"154","Macao SAR China",NA,NA,"MAC",53.8,58,NA,NA,NA
+"155","Macau",8,NA,NA,NA,NA,NA,NA,NA
+"156","Macedonia",23,1660,"MKD",51.9,56.7,NA,NA,NA
+"157","Madagascar",77,215,"MDG",1.7,1.9,"Africa",5.65,17
+"158","Malawi",142,142,"MWI",2.26,3.33,"Africa",6.69,22
+"159","Malaysia",11,4313,"MYS",56.3,61,"Oceania",3.24,48
+"160","Maldives",49,1079,"MDV",28.3,34,NA,NA,NA
+"161","Mali",149,223,"MLI",1.9,2,"Africa",6.6,7
+"162","Malta",8,8793,"MLT",63,69.22,NA,NA,NA
+"163","Marshall-Islands",NA,NA,NA,NA,NA,"Oceania",4.49,27
+"164","Marshall Islands",NA,NA,"MHL",NA,NA,NA,NA,NA
+"165","Marshall.Islands",26,1649,NA,NA,NA,NA,NA,NA
+"166","Martinique",7,12717,NA,NA,NA,NA,NA,NA
+"167","Mauritania",92,401,"MRT",4,4.5,"Africa",5.03,3
+"168","Mauritius",15,3508,"MUS",28.33,34.95,"Africa",2.28,75
+"169","Mexico",31,2700,"MEX",31.05,36.15,"Americas",2.75,53
+"170","Micronesia",20,2104,NA,NA,NA,NA,NA,NA
+"171","Micronesia Fed. Sts.",NA,NA,"FSM",20,NA,NA,NA,NA
+"172","Moldova",26,383,"MDA",32.3,38,"Europe",1.8,22
+"173","Monaco",NA,26470,"MCO",75,NA,NA,NA,NA
+"174","Mongolia",52,388,"MNG",12.9,20,"Asia",3.27,61
+"175","Montenegro",NA,NA,"MNE",37.5,40,NA,NA,NA
+"176","Morocco",51,1265,"MAR",49,51,"Africa",3.1,50
+"177","Mozambique",110,77,"MOZ",4.17,4.3,NA,NA,NA
+"178","Myanmar",78,2399,"MMR",0.25,0.98,"Asia",3.3,17
+"179","Namibia",60,2059,"NAM",11.6,12,"Africa",4.9,29
+"180","Nepal",82,203,"NPL",7.93,9,"Asia",4.95,29
+"181","Netherlands",6,25635,"NLD",90.72,92.3,"Europe",1.55,78
+"182","Netherlands.Antilles",10,9039,NA,NA,NA,NA,NA,NA
+"183","New-Caledonia",NA,NA,NA,NA,NA,"Oceania",2.53,25
+"184","New-Zealand",NA,NA,NA,NA,NA,"Oceania",2.02,69
+"185","New Caledonia",NA,NA,"NCL",42,50,NA,NA,NA
+"186","New Zealand",NA,NA,"NZL",83,86,NA,NA,NA
+"187","New.Caledonia",18,19450,NA,NA,NA,NA,NA,NA
+"188","New.Zealand",7,16866,NA,NA,NA,NA,NA,NA
+"189","Nicaragua",44,464,"NIC",10,10.6,"Americas",3.85,49
+"190","Niger",114,207,"NER",0.83,1.3,"Africa",7.1,4
+"191","Nigeria",77,587,"NGA",24,28.43,"Africa",5.97,6
+"192","Northern Mariana Islands",NA,NA,"MNP",NA,NA,NA,NA,NA
+"193","Northern.Mariana.Islands",2,NA,NA,NA,NA,NA,NA,NA
+"194","Norway",5,33734,"NOR",93.39,93.97,"Europe",1.88,76
+"195","Oman",25,6232,"OMN",62,68,"Asia",7.2,9
+"196","Pakistan",74,504,"PAK",8,9,"Asia",5.02,18
+"197","Palau",25,6417,"PLW",NA,NA,NA,NA,NA
+"198","Panama",21,2934,"PAN",40.1,42.7,"Americas",2.63,64
+"199","Papua New Guinea",NA,NA,"PNG",1.28,2,NA,NA,NA
+"200","Papua.New.Guinea",61,1083,NA,NA,NA,NA,NA,NA
+"201","Paraguay",39,1860,"PRY",19.8,23.9,"Americas",4.17,56
+"202","Peru",45,2497,"PER",34.77,36.5,"Americas",2.98,64
+"203","Philippines",35,1093,"PHL",25,29,"Oceania",3.62,40
+"204","Poland",13,3058,"POL",62.32,64.88,NA,NA,NA
+"205","Portugal",8,10428,"PRT",51.1,55.3,"Europe",1.48,66
+"206","Puerto-Rico",NA,NA,NA,NA,NA,"Americas",2.1,64
+"207","Puerto Rico",NA,NA,"PRI",45.3,48,NA,NA,NA
+"208","Puerto.Rico",9,12213,NA,NA,NA,NA,NA,NA
+"209","Qatar",17,14013,"QAT",81.6,86.2,"Asia",3.77,32
+"210","Reunion",7,11854,NA,NA,NA,"Africa",2.1,67
+"211","Romania",24,1570,"ROU",39.93,44.02,"Europe",1.4,57
+"212","Russia",19,2451,NA,NA,NA,"Europe",1.35,32
+"213","Russian Federation",NA,NA,"RUS",43,49,NA,NA,NA
+"214","Rwanda",125,238,"RWA",8,7,"Africa",6,21
+"215","Saint-Kitts",NA,NA,NA,NA,NA,"Americas",2.63,41
+"216","Saint-Lucia",NA,NA,NA,NA,NA,"Americas",3.82,47
+"217","Saint.Kitts",25,4819,NA,NA,NA,NA,NA,NA
+"218","Saint.Lucia",18,3183,NA,NA,NA,NA,NA,NA
+"219","Samoa",58,1106,"WSM",7,NA,"Oceania",3.8,34
+"220","San Marino",NA,NA,"SMR",NA,49.6,NA,NA,NA
+"221","San.Marino",NA,19121,NA,NA,NA,NA,NA,NA
+"222","Sao Tome and Principe",NA,NA,"STP",18.75,20.1612,NA,NA,NA
+"223","Sao.Tome",51,49,NA,NA,NA,NA,NA,NA
+"224","Saudi Arabia",NA,NA,"SAU",41,47.5,NA,NA,NA
+"225","Saudi.Arabia",23,6583,NA,NA,NA,NA,NA,NA
+"226","Senegal",62,572,"SEN",16,17.5,"Africa",5.62,13
+"227","Serbia",NA,NA,"SRB",40.9,42.2,NA,NA,NA
+"228","Seychelles",12,7272,"SYC",41,43.16400446,NA,NA,NA
+"229","Sierra Leone",NA,NA,"SLE",NA,NA,NA,NA,NA
+"230","Sierra.Leone",169,293,NA,NA,NA,NA,NA,NA
+"231","Singapore",5,25581,"SGP",71,71,"Oceania",1.79,74
+"232","Sint Maarten (Dutch part)",NA,NA,"SXM",NA,NA,NA,NA,NA
+"233","Slovak Republic",NA,NA,"SVK",75.71,74.44,NA,NA,NA
+"234","Slovakia",12,3266,NA,NA,NA,"Europe",1.5,74
+"235","Slovenia",7,9652,"SVN",70,72,NA,NA,NA
+"236","Solomon Islands",NA,NA,"SLB",5,6,NA,NA,NA
+"237","Solomon.Islands",23,686,NA,NA,NA,NA,NA,NA
+"238","Somalia",112,119,"SOM",NA,1.25,NA,NA,NA
+"239","South-Africa",NA,NA,NA,NA,NA,"Africa",3.81,50
+"240","South Africa",NA,NA,"ZAF",18,21,NA,NA,NA
+"241","South Sudan",NA,NA,"SSD",NA,NA,NA,NA,NA
+"242","South.Africa",48,3230,NA,NA,NA,NA,NA,NA
+"243","Spain",7,14111,"ESP",65.8,67.6,"Europe",1.22,59
+"244","Sri-Lanka",NA,NA,NA,NA,NA,"Asia",2.1,66
+"245","Sri Lanka",NA,NA,"LKA",12,15,NA,NA,NA
+"246","Sri.Lanka",15,716,NA,NA,NA,NA,NA,NA
+"247","St-Vincent",NA,NA,NA,NA,NA,"Americas",3.86,58
+"248","St. Kitts and Nevis",NA,NA,"KNA",76,NA,NA,NA,NA
+"249","St. Lucia",NA,NA,"LCA",40,42,NA,NA,NA
+"250","St. Martin (French part)",NA,NA,"MAF",NA,NA,NA,NA,NA
+"251","St. Vincent and the Grenadines",NA,NA,"VCT",38.5,43.01,NA,NA,NA
+"252","St.Vincent",19,2305,NA,NA,NA,NA,NA,NA
+"253","Sudan",71,36,"SDN",8,19,"Africa",4.61,8
+"254","Suriname",24,967,"SUR",31.59,32,NA,NA,NA
+"255","Swaziland",65,1389,"SWZ",11.04,18.13,"Africa",4.46,20
+"256","Sweden",5,26253,"SWE",90,91,"Europe",1.8,78
+"257","Switzerland",5,42416,"CHE",83.9,85.2,"Europe",1.46,71
+"258","Syria",33,3573,NA,NA,NA,"Asia",4,36
+"259","Syrian Arab Republic",NA,NA,"SYR",20.7,22.5,NA,NA,NA
+"260","Tajikistan",56,122,"TJK",11.55,13.03,"Asia",3.93,21
+"261","Tanzania",80,139,"TZA",11,12,"Africa",5.48,18
+"262","Thailand",30,2896,"THA",22.4,23.7,"Asia",1.74,74
+"263","Timor-Leste",NA,NA,"TLS",0.21,0.9,NA,NA,NA
+"264","Togo",86,322,"TGO",3,3.5,"Africa",6.08,12
+"265","Tonga",3,1787,"TON",16,25,"Oceania",4.02,74
+"266","Trinidad-and-Tobago",NA,NA,NA,NA,NA,"Americas",2.1,53
+"267","Trinidad and Tobago",NA,NA,"TTO",48.5,55.2,NA,NA,NA
+"268","Trinidad.and.Tobago",14,4083,NA,NA,NA,NA,NA,NA
+"269","Tunisia",37,2030,"TUN",36.8,39.1,"Africa",2.92,60
+"270","Turkey",44,2814,"TUR",39.82,42.1,"Asia",2.5,63
+"271","Turkmenistan",57,321,"TKM",3,5,"Asia",3.58,20
+"272","Turks and Caicos Islands",NA,NA,"TCA",NA,NA,NA,NA,NA
+"273","Tuvalu",NA,NA,"TUV",25,30,NA,NA,NA
+"274","Uganda",113,305,"UGA",12.5,13.01354333,"Africa",7.1,15
+"275","Ukraine",18,694,"UKR",23.3,30.6,"Europe",1.38,23
+"276","United-Kingdom",NA,NA,NA,NA,NA,"Europe",1.72,82
+"277","United-States",NA,NA,NA,NA,NA,"Americas",1.96,71
+"278","United Arab Emirates",NA,NA,"ARE",68,70,NA,NA,NA
+"279","United Kingdom",NA,NA,"GBR",78,82,NA,NA,NA
+"280","United States",NA,NA,"USA",74,77.863021,NA,NA,NA
+"281","United.Arab.Emirates",15,17690,NA,NA,NA,NA,NA,NA
+"282","United.Kingdom",6,18913,NA,NA,NA,NA,NA,NA
+"283","United.States",7,26037,NA,NA,NA,NA,NA,NA
+"284","Uruguay",17,5602,"URY",46.4,51.4,NA,NA,NA
+"285","Uzbekistan",43,435,"UZB",20,30.2,"Asia",3.48,56
+"286","Vanuatu",38,1289,"VUT",8,NA,"Oceania",4.36,15
+"287","Venezuela",21,3496,"VEN",37.37,40.22,"Americas",2.98,52
+"288","Viet-Nam",NA,NA,NA,NA,NA,"Asia",2.97,65
+"289","Viet.Nam",37,270,NA,NA,NA,NA,NA,NA
+"290","Vietnam",NA,NA,"VNM",30.65,35.07,NA,NA,NA
+"291","Virgin Islands (U.S.)",NA,NA,"VIR",NA,NA,NA,NA,NA
+"292","Virgin.Islands",12,NA,NA,NA,NA,NA,NA,NA
+"293","West Bank and Gaza",NA,NA,"PSE",37.4,41.08,NA,NA,NA
+"294","Western.Sahara",64,NA,NA,NA,NA,NA,NA,NA
+"295","Yemen",80,732,"YEM",12.35,14.905,"Asia",7.6,7
+"296","Yugoslavia",19,1487,NA,NA,NA,NA,NA,NA
+"297","Zambia",103,382,"ZMB",10,11.5,"Africa",5.49,25
+"298","Zimbabwe",68,786,"ZWE",11.5,15.7,"Africa",4.68,48
