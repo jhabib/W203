@@ -2,7 +2,7 @@ library(ggplot2)
 
 load("Countries")
 
-setwd("C:/Users/SP4/Google Drive/Exploring and Analyzing Data/W203 Week 5/")
+setwd("C:/Users/SP4/Google Drive/Exploring and Analyzing Data/W203 Async/W203 Week 5/")
 getwd()
 
 library(datasets)
