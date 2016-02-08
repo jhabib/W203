@@ -1,0 +1,54 @@
+---
+title: "W203 Week 5 Lab 1"
+author: "Mohammad Jawad Habib"
+date: "February 7, 2016"
+output: pdf_document
+---
+
+
+# Part 2a. Variable Manipulations
+
+## 10. Load Data and calculate gdp_growth
+
+We'll set the working directory to where we saved the "GDP_World_Bank.csv" file and then load it as a `data.frame`.
+
+```{r}
+setwd("C:/Users/SP4/Documents/Exploring and Analyzing Data/W203 Async/W203 Week 5/Lab 1")
+
+gdp.worldbank <- read.csv("GDP_World_Bank.csv", header = TRUE)
+```
+
+
+`gdp_growth` is the difference between `gdp2012` and `gdp2011`.
+```{r}
+gdp.worldbank$gdp_growth <- gdp.worldbank$gdp2012 - gdp.worldbank$gdp2011
+
+# gdp.worldbank$gdp_growth
+```
+
+We then calculate the mean of `gdp_growth`; we will ingore `NA` values in the mean calculation.
+The calculation below reveals the `gdp.growth.mean` to be 717,237,6796.
+```{r}
+gdp.growth.mean <- mean(gdp.worldbank$gdp_growth, na.rm = TRUE)
+gdp.growth.mean
+
+```
+
+## 11. Create a histogram of `gdp_growth`
+We will use the ggplot2 library to create a nicer histogram than the base R package. We will ignore the `NA` values.
+```{r}
+library(ggplot2)
+
+gdp.worldbank.subset <- gdp.worldbank[!is.na(gdp.worldbank$gdp_growth),c(1, 5)]
+
+gdp.growth.hist <- ggplot(gdp.worldbank.subset, aes(gdp_growth)) + 
+  geom_histogram(na.rm = TRUE, 
+                 bins = 20, 
+                 aes(fill = ..count..), 
+                 col = "blue") + 
+  labs(title="Histogram for GDP Growth") + 
+  labs(x="gdp_growth", y="Count") 
+
+gdp.growth.hist
+
+```
