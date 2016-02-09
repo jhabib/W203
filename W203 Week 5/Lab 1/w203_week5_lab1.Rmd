@@ -12,8 +12,12 @@ output: pdf_document
 
 We'll set the working directory to where we saved the "GDP_World_Bank.csv" file and then load it as a `data.frame`.
 
+Before running the script change the directory to where you have stored the 'GDP_World_Bank.csv'.
 ```{r}
-setwd("C:/Users/SP4/Documents/Exploring and Analyzing Data/W203 Async/W203 Week 5/Lab 1")
+# dir.string <- "C:/Users/SP4/Documents/Exploring and Analyzing Data/W203 Async/W203 Week 5/Lab 1"
+
+dir.string <- "C:/Users/jhabib/documents/r/W203/W203 Week 5/Lab 1"
+setwd(dir.string)
 
 gdp.worldbank <- read.csv("GDP_World_Bank.csv", header = TRUE)
 ```
@@ -37,7 +41,7 @@ The calculation above reveals the `gdp.growth.mean` to be `return(gdp.growth.mea
 ## 11. Create a histogram of `gdp_growth`
 We can create a basic histogram using the base R. We will ignore the `NA` values in `gdp_growth`.
 ```{r}
-gdp.worldbank.subset <- gdp.worldbank[!is.na(gdp.worldbank$gdp_growth),c(1, 5)]
+gdp.worldbank.subset <- gdp.worldbank[!is.na(gdp.worldbank$gdp_growth),c(1, 3, 4, 5)]
 
 hist(gdp.worldbank.subset$gdp_growth, 
      freq = TRUE, 
@@ -51,7 +55,7 @@ abline(v = mean(gdp.worldbank.subset$gdp_growth), col="red")
 
 We will use the ggplot2 library to create a nicer histogram than the base R package. This time we will plot the density on y-axis.
 ```{r}
-library(ggplot2)
+require(ggplot2)
 
 gdp.growth.hist <- ggplot(gdp.worldbank.subset, aes(gdp_growth)) + 
   geom_histogram(na.rm = TRUE, 
@@ -89,7 +93,7 @@ gdp.growth.summary.values <- c(gdp.growth.mean,
                                sd(gdp.worldbank.subset$gdp_growth), 
                                e1071::skewness(gdp.worldbank.subset$gdp_growth), 
                                e1071::kurtosis(gdp.worldbank.subset$gdp_growth))
-gdp.growth.summary <- data.frame(gdp.growth.summary.names, gdp.growth.summary.values)
+gdp.growth.summary <- data.frame(gdp.growth.summary.parameter, gdp.growth.summary.values)
 gdp.growth.summary
 ```
 
@@ -102,17 +106,6 @@ jarque.bera.test(gdp.worldbank.subset$gdp_growth)
 
 ```
 It seems that the p-value of 2.2e-16 means that our null-hypothesis of normal distribution is very unlikely.
-
-```{r}
-# library(MASS)
-# gdp.growth.fit <- fitdistr(gdp.worldbank.subset$gdp_growth, "lognormal")
-# gdp.growth.hist + 
-#   stat_function(fun=dlnorm, 
-#                 colour = "green", 
-#                 size = 1, 
-#                 args=list(meanlog=log(mean(gdp.worldbank.subset$gdp_growth)), 
-#                           sdlog=log(sd(gdp.worldbank.subset$gdp_growth))))
-```
 
 ## 12. Create a `high_growth` boolean variable
 We will create a `high_growth` variable that returns 1 if gdp_growth is greater than mean for a country and 0 if not.
@@ -152,7 +145,8 @@ To make things simpler, we will use the `WDI` package that implements an API to 
 require(WDI)
 rural.pop.worldbank <- WDI(country = "all", indicator = "SP.RUR.TOTL.ZS", 
                            start = 2010, end = 2012, extra = FALSE, cache = NULL)
-View(head(rural.pop.worldbank))
+
+head(rural.pop.worldbank)
 ```
 We see that `rural.pop.worldbank` is in long format. We will convert it to wide format.
 ```{r}
@@ -171,14 +165,19 @@ rural.pop.wide <- dcast(melt(rural.pop.worldbank,
 
 Let's merge our gdp and rural population data frames together by country. We will use our `gdp.worldbank.subset` data frame because we removed the `NA` values of gdp from it.
 ```{r}
-country.data.merged <- merge(gdp.worldbank.subset, rural.pop.wide, by.x = "Country", by.y = "country", incomparables = NULL)
+country.data.merged <- merge(gdp.worldbank.subset, 
+                             rural.pop.wide, 
+                             by.x = "Country", 
+                             by.y = "country", 
+                             incomparables = NULL)
 
-View(head(country.data.merged))
+head(country.data.merged)
 ```
 
 Next we'll add a new variable to the merged data frame to get the change in percent population from 2011 to 2012.
 ```{r}
-country.data.merged$rural_pop_growth <- country.data.merged$rural_pop_percent_2012 - country.data.merged$rural_pop_percent_2011
+country.data.merged$rural_pop_growth <- country.data.merged$rural_pop_percent_2012 - 
+  country.data.merged$rural_pop_percent_2011
 ```
 
 
@@ -186,7 +185,20 @@ Let's create a scatter plot of `rural_pop_growth` on y-axis and `gdp_growth` on 
 ```{r}
 rur.growth.by.gdp.growth <- ggplot(country.data.merged, 
                                    aes(x = gdp_growth, y = rural_pop_growth)) + 
-  geom_point()
+  geom_point(na.rm = TRUE)
 
 rur.growth.by.gdp.growth
 ```
+It's interesting to note that there does not appear to be a correlation between changes in rural populationand changes in gdp from 2011 to 2012.
+
+May be we can read the graph better if x-axis showed `gdp_growth` as a percent of `gdp2011`.
+```{r}
+rur.growth.by.gdp.growth1 <- ggplot(country.data.merged, 
+                                   aes(x = gdp_growth/gdp2011*100, y = rural_pop_growth)) + 
+  geom_point(na.rm = TRUE) + 
+  geom_vline(xintercept = 0, color = "red") + 
+  geom_hline(yintercept = 0, color = "red")
+
+rur.growth.by.gdp.growth1
+```
+This graph is readable but it still does not show any obvious correlation between changes in rural population and `gdp_growth`. It seems though that most countries saw a decrease in rural population percentage regardless of the positive or negative changes in `gdp_growth` from 2011 to 2012.
