@@ -72,3 +72,20 @@ graph4 +  stat_summary(fun.y = mean,
                        colour = "Black") + stat_summary(fun.data = mean_cl_normal, 
                                                         geom = "errorbar", 
                                                         width = 0.2)
+
+# investigate the effect of high and low gdp
+# code a new high_gdp variable
+Countries$high_gdp <- ifelse(Countries$gdp > mean(Countries$gdp, na.rm = TRUE), "High", "Low")
+Countries$high_gdp
+Countries$high_gdp <- factor(Countries$high_gdp)
+Countries_lim <- Countries[!(is.na(Countries$high_gdp) | is.na(Countries$high_cpi)), ]
+
+# create bar chart of internet growth against high corruption and high gdp
+graph5 <- ggplot(Countries_lim, aes(high_gdp, internet_growth, fill = high_cpi))
+graph5 + stat_summary(fun.y = mean, geom = "bar", colour = "black", position = "dodge") + 
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2, position = position_dodge(width = 0.9))
+
+# create scatter plot of internet growth by internet users and high cpi
+
+graph6 <- ggplot(Countries_lim, aes(internet_users_2010, internet_growth, colour = high_cpi))
+graph6 + geom_point() + geom_smooth()

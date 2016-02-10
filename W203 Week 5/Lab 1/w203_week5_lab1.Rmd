@@ -14,9 +14,9 @@ We'll set the working directory to where we saved the "GDP_World_Bank.csv" file 
 
 Before running the script change the directory to where you have stored the 'GDP_World_Bank.csv'.
 ```{r}
-# dir.string <- "C:/Users/SP4/Documents/Exploring and Analyzing Data/W203 Async/W203 Week 5/Lab 1"
+dir.string <- "C:/Users/SP4/Documents/Exploring and Analyzing Data/W203 Async/W203 Week 5/Lab 1"
 
-dir.string <- "C:/Users/jhabib/documents/r/W203/W203 Week 5/Lab 1"
+# dir.string <- "C:/Users/jhabib/documents/r/W203/W203 Week 5/Lab 1"
 setwd(dir.string)
 
 gdp.worldbank <- read.csv("GDP_World_Bank.csv", header = TRUE)
