@@ -5,6 +5,11 @@ date: "February 21, 2016"
 output: pdf_document
 ---
 
+```{r}
+require(knitr)
+```
+
+# 1. Write a p-value calculator
 1. Write a function in R that does the following:
 Takes sample data (e.g., as a vector), mean of the null hypothesis, population standard deviation,  a Boolean variable indicating whether we want a one-tailed or two-tailed test, and another Boolean variable indicating which tail (left or right) should be taken in case of a one-tailed test. Returns p-values for the required test (Null is “population mean is the one that the function is fed”), as well as a Boolean value showing whether the test passes a conventional 5% level or not.
 
@@ -35,7 +40,7 @@ myfun <- function(data, mu, pop.sd, two.tailed=TRUE, left.tail=NULL) {
     rejectNull <- ifelse(p.val < 0.05, TRUE, FALSE)
   }
   
-  (list("p.value" = p.val, "rejectNull" = rejectNull))
+  list("p.value" = p.val, "rejectNull" = rejectNull)
 }
 ```
 
@@ -44,111 +49,119 @@ Seed the RNG for repeatable results.
 set.seed(5000)
 ```
 
+# 2. Test p value calculator
 2. Choose a sample size and then use `rnorm(n, mean, sd)` to generate a random sample and test your function.
 ```{r}
-pop_mean <- 50
-pop_sd <- 21
-sample_size <- 36
-sample_data <- rnorm(sample_size, mean = pop_mean, sd = pop_sd)
+pop.mean <- 50
+pop.sd <- 21
+sample.size <- 36
+sample.data <- rnorm(sample.size, mean = pop.mean, sd = pop.sd)
 
-# run a two-tailed test
-myfun(sample_data, mu = pop_mean, pop.sd = pop_sd, two.tailed = TRUE, left.tail = NULL)
-
-# run a left-tailed test
-myfun(sample_data, mu = pop_mean, pop.sd = pop_sd, two.tailed = FALSE, left.tail = TRUE)
+mean(sample.data)
 
 # run a right tailed test
-myfun(sample_data, mu = pop_mean, pop.sd = pop_sd, two.tailed = FALSE, left.tail = FALSE)
+kable(data.frame(myfun(sample.data, mu = pop.mean, pop.sd = pop.sd, two.tailed = FALSE, 
+                       left.tail = FALSE)))
+
+# run a left-tailed test
+kable(data.frame(myfun(sample.data, mu = pop.mean, pop.sd = pop.sd, two.tailed = FALSE, 
+                       left.tail = TRUE)))
+
+# run a two-tailed test
+kable(data.frame(myfun(sample.data, mu = pop.mean, pop.sd = pop.sd, two.tailed = TRUE, 
+                       left.tail = NULL)))
+
 ```
 
-
+# 3. Repeat p value calculator test multiple times
 3. Use replicate or sapply (or replicate) to generate a sample and do the test multiple times (say 1000). Plot the histogram of p-values that you are getting when the Null is true. Is your function calculating Type-I errors correctly?
 ```{r}
 num.trials <- 1000
 
-result.vec.two.tailed <- replicate(num.trials, 
-                                   myfun(rnorm(sample_size, mean = pop_mean, sd = pop_sd), 
-                                         mu = pop_mean, 
-                                         pop.sd = pop_sd, 
-                                         two.tailed = TRUE, 
-                                         left.tail = NULL)$p.value, 
-                                   simplify = TRUE)
-hist(result.vec.two.tailed)
-
-result.vec.left.tailed <- replicate(num.trials, 
-                                   myfun(rnorm(sample_size, mean = pop_mean, sd = pop_sd), 
-                                         mu = pop_mean, 
-                                         pop.sd = pop_sd, 
-                                         two.tailed = FALSE, 
-                                         left.tail = TRUE)$p.value, 
-                                   simplify = TRUE)
-hist(result.vec.left.tailed)
-
-
 result.vec.right.tailed <- replicate(num.trials, 
-                                    myfun(rnorm(sample_size, mean = pop_mean, sd = pop_sd), 
-                                          mu = pop_mean, 
-                                          pop.sd = pop_sd, 
+                                    myfun(rnorm(sample.size, mean = pop.mean, sd = pop.sd), 
+                                          mu = pop.mean, 
+                                          pop.sd = pop.sd, 
                                           two.tailed = FALSE, 
                                           left.tail = FALSE)$p.value, 
                                     simplify = TRUE)
-hist(result.vec.right.tailed)
+hist(result.vec.right.tailed, main = "Upper Tail Test", xlab = "p value")
+
+result.vec.left.tailed <- replicate(num.trials, 
+                                   myfun(rnorm(sample.size, mean = pop.mean, sd = pop.sd), 
+                                         mu = pop.mean, 
+                                         pop.sd = pop.sd, 
+                                         two.tailed = FALSE, 
+                                         left.tail = TRUE)$p.value, 
+                                   simplify = TRUE)
+hist(result.vec.left.tailed, main = "Lower Tail Test", xlab = "p value")
+
+
+result.vec.two.tailed <- replicate(num.trials, 
+                                   myfun(rnorm(sample.size, mean = pop.mean, sd = pop.sd), 
+                                         mu = pop.mean, 
+                                         pop.sd = pop.sd, 
+                                         two.tailed = TRUE, 
+                                         left.tail = NULL)$p.value, 
+                                   simplify = TRUE)
+hist(result.vec.two.tailed, main = "Two Tail Test", xlab = "p value")
+
 ```
 
 We can test below whether we are returning `TRUE` or `FALSE` correctly from `myfun`.
 ```{r}
 result.vec.right.tailed <- replicate(num.trials, 
-                                    myfun(rnorm(sample_size, mean = pop_mean, sd = pop_sd), 
-                                          mu = pop_mean, 
-                                          pop.sd = pop_sd, 
+                                    myfun(rnorm(sample.size, mean = pop.mean, sd = pop.sd), 
+                                          mu = pop.mean, 
+                                          pop.sd = pop.sd, 
                                           two.tailed = FALSE, 
                                           left.tail = FALSE), 
                                     simplify = TRUE)
 df <- data.frame(cbind(result.vec.right.tailed[1,], result.vec.right.tailed[2,]))
 colnames(df) <- c("p.value", "rejectNull")
-head(df)
+kable(head(df))
 ```
 
-4. Now assume your Null is false. Note: For type-II error calculation, you need a specific assumption about the mean of the population from which the sample is taken. 
-You can assume that this mean is one tenth of one standard deviation above the Null mean.
-Calculate type-II errors both theoretically and by simulation as in step 3.
+# 4. Calculate Type II error
+4. Now assume your Null is false. Note: For type-II error calculation, you need a specific assumption about the mean of the population from which the sample is taken. You can assume that this mean is one tenth of one standard deviation above the Null mean. Calculate type-II errors both theoretically and by simulation as in step 3.
 
-`sample_data` represents our test vector with population mean of `pop_mean` and population sd of `pop_sd`. We assume that `mean(sample_data)` is our null hypothesis in this case.
+## Theoretical Type II error calculation
+`sample.data` represents our test vector with population mean of `pop.mean` and population sd of `pop.sd`. We assume that `mean(sample.data)` is our null hypothesis in this case.
 
 The questions specifies a mean value (we will call this `rejection.mean`). 
 
-## Perform a right-tailed test
+### Perform a right-tailed test
 For a right-tailed test, any values above this `rejection.mean` will cause us to reject the null hypothesis.
 ```{r}
-rejection.mean <- pop_mean + pop_sd/10
+rejection.mean <- pop.mean + pop.sd/10
 rejection.mean
 ```
-For original population with mean pop_mean, rejection.mean represents a z-score of `z.pop` given below.
+For original population with mean pop.mean, rejection.mean represents a z-score of `z.pop` given below.
 ```{r}
-z.pop <- (rejection.mean - pop_mean) / 
-  (pop_sd/sqrt(length(sample_data)))
+z.pop <- (rejection.mean - pop.mean) / 
+  (pop.sd/sqrt(length(sample.data)))
 z.pop
 ```
 
-Assuming that Null `pop_mean` is False, we take `mean(sample_data)` as our Null hypothesis
-That is, we use a distribution with `mean(sample_data)`.
+Assuming that Null `pop.mean` is False, we take `mean(sample.data)` as our Null hypothesis
+That is, we use a distribution with `mean(sample.data)`.
 
-For Type I error, we will use the original population distribution where Null is given by `pop_mean`. Type I error is the area to the right of `rejection.mean` on the original population distribution for a right-tailed test.
+For Type I error, we will use the original population distribution where Null is given by `pop.mean`. Type I error is the area to the right of `rejection.mean` on the original population distribution for a right-tailed test.
 ```{r}
-z.type.one.right <- (rejection.mean - pop_mean) / 
-  (pop_sd/sqrt(length(sample_data)))
+z.type.one.right <- (rejection.mean - pop.mean) / 
+  (pop.sd/sqrt(length(sample.data)))
 z.type.one.right
 p.type.one.right <- pnorm(z.type.one.right, lower.tail = FALSE)
 p.type.one.right
 ```
 
-Type II error is the area to the left of `rejection.mean` on the alternate distribution with mean equal to `mean(sample_data)`.
+Type II error is the area to the left of `rejection.mean` on the alternate distribution with mean equal to `mean(sample.data)`.
 ```{r}
-z.type.two.right <- (rejection.mean - mean(sample_data)) / 
-  (pop_sd/sqrt(length(sample_data)))
+z.type.two.right <- (rejection.mean - mean(sample.data)) / 
+  (pop.sd/sqrt(length(sample.data)))
 z.type.two.right
 
-# For Type II, this time we want the area to the left of z.type.two.right on alternate distribution
+# For Type II, we want the area to the left of z.type.two.right on alternate distribution
 p.type.two.right <- pnorm(z.type.two.right, lower.tail = TRUE)
 p.type.two.right
 
@@ -157,23 +170,23 @@ test.power.right
 ```
 For a right-tailed test, there is a probability given by `p.type.two.right` that we will fail to reject the null hypothesis when we should. This is our Type II error in this case.
 
-## Perform a left-tailed test
-In a left-tailed test, Type I error is area to the left of `rejection.mean` on the original distribution with mean `pop_mean`.
+### Perform a left-tailed test
+In a left-tailed test, Type I error is area to the left of `rejection.mean` on the original distribution with mean `pop.mean`.
 ```{r}
-z.type.one.left <- (rejection.mean - mean(sample_data)) / 
-  (pop_sd/sqrt(length(sample_data)))
+z.type.one.left <- (rejection.mean - mean(sample.data)) / 
+  (pop.sd/sqrt(length(sample.data)))
 z.type.one.left
 
 p.type.one.left <- pnorm(z.type.one.left, lower.tail = TRUE)
 p.type.one.left
 ```
 
-In a left tailed test, Type II error is given by the area to the right of `rejection.mean` on the alternate distribution with mean equal to `mean(sample_data)`.
+In a left tailed test, Type II error is given by the area to the right of `rejection.mean` on the alternate distribution with mean equal to `mean(sample.data)`.
 
 ```{r}
 # z-value in this case is the same as z.type.two.right but let's calculate it anyways
-z.type.two.left <- (rejection.mean - mean(sample_data)) / 
-  (pop_sd/sqrt(length(sample_data)))
+z.type.two.left <- (rejection.mean - mean(sample.data)) / 
+  (pop.sd/sqrt(length(sample.data)))
 z.type.two.left
 
 # For Type II, this time we want the area to the right of z.type.two.left on alternate distribution
@@ -186,45 +199,45 @@ test.power.left
 ```
 For a left-tailed test, there is a probability given by `p.type.two.left` that we will fail to reject the null hypothesis when we should. This is our Type II error in this case.
 
-## Perform a two-tailed test
+### Perform a two-tailed test
 In a two-tailed test, rejection region is to the left of -alpha/2 and to the right of alpha/2 on the original distribution.
 ```{r}
-z.original <- (rejection.mean - pop_mean) / (pop_sd/(sqrt(length(sample_data))))
+z.original <- (rejection.mean - pop.mean) / (pop.sd/(sqrt(length(sample.data))))
 z.original
 
 # Type I error is the same as the value given below
 p.type.one.twotailed <- pnorm(z.original, lower.tail=FALSE)
 p.type.one.twotailed
 
-alpha_by_two <- p.type.one.twotailed/2
-alpha_by_two
+alpha.by.two <- p.type.one.twotailed/2
+alpha.by.two
 
-z.alpha_by_two.pos <- qnorm(alpha_by_two, lower.tail = FALSE) 
-z.alpha_by_two.pos
+z.alpha.by.two.pos <- qnorm(alpha.by.two, lower.tail = FALSE) 
+z.alpha.by.two.pos
 
-rejection.mean.twotailed.pos <- pop_mean + 
-  z.alpha_by_two.pos*(pop_sd/sqrt(length(sample_data)))
+rejection.mean.twotailed.pos <- pop.mean + 
+  z.alpha.by.two.pos*(pop.sd/sqrt(length(sample.data)))
 rejection.mean.twotailed.pos
 
-z.alpha_by_two.neg <- -z.alpha_by_two.pos
+z.alpha.by.two.neg <- -z.alpha.by.two.pos
 
-rejection.mean.twotailed.neg <- pop_mean + 
-  z.alpha_by_two.neg*(pop_sd/sqrt(length(sample_data)))
+rejection.mean.twotailed.neg <- pop.mean + 
+  z.alpha.by.two.neg*(pop.sd/sqrt(length(sample.data)))
 rejection.mean.twotailed.neg
 ```
 
 To calculate Type II error, we will first get the z-scores for our `rejection.mean.twotailed.pos` and `rejection.mean.twotailed.neg` on the alternate distribution. Then we will use `pnorm` to get the regions to the right and left of the positive and negative z-scores on the alternate distribution. We will then calculate Type II error by subtracting those two values from 1.
 ```{r}
 # For the positive rejection.mean.two.tailed
-z.twotailed.positive <- (rejection.mean.twotailed.pos - mean(sample_data)) / 
-  (pop_sd/sqrt(length(sample_data)))
+z.twotailed.positive <- (rejection.mean.twotailed.pos - mean(sample.data)) / 
+  (pop.sd/sqrt(length(sample.data)))
 z.twotailed.positive
 
 p.twotailed.positive <- pnorm(z.twotailed.positive, lower.tail = FALSE)
 p.twotailed.positive
 
-z.twotailed.negative <- (rejection.mean.twotailed.neg - mean(sample_data)) / 
-  (pop_sd/sqrt(length(sample_data)))
+z.twotailed.negative <- (rejection.mean.twotailed.neg - mean(sample.data)) / 
+  (pop.sd/sqrt(length(sample.data)))
 z.twotailed.negative
 
 p.twotailed.negative <- pnorm(z.twotailed.negative, lower.tail = TRUE)
@@ -238,4 +251,107 @@ p.type.two.twotailed
 
 test.power.twotailed <- 1 - p.type.two.twotailed
 test.power.twotailed
+```
+
+## Numeric Type II error calculation
+Let's hack together a crude function that let's us calculate Type II error. When calling this function leave the default value of `sample.size` for a vector. You only need to specify `sample.size` when your `test.data` consists of a single value. This is so we can pass a randomly changing vector of `test.data` to this function using `replicate`.
+```{r}
+TypeTwoError <- function(test.data, null.mean, null.sd, alpha, 
+                         sample.size = NULL, tail.type = "Two") {
+  # return(a)
+  
+  if(is.null(sample.size))
+    sample.size <- length(test.data)
+  
+  alternate.mean <- mean(test.data)
+
+  std.err <- null.sd / sqrt(sample.size)
+  
+  tail.type <- casefold(tail.type, upper = TRUE)
+  
+  switch(tail.type, 
+         TWO = {
+           type.one.vec <- c(alpha/2, 1-alpha/2)
+           bounds.vec <- qnorm(type.one.vec, null.mean, std.err, lower.tail = TRUE)
+           p.values.vec <- pnorm(bounds.vec, 
+                                 alternate.mean, 
+                                 std.err, 
+                                 lower.tail = TRUE)
+           type.two.error <- diff(p.values.vec)
+         }, 
+         LEFT = { 
+           lower.bound <- qnorm(alpha, null.mean, std.err, lower.tail = TRUE)
+           type.two.error <- pnorm(lower.bound, 
+                                   alternate.mean, 
+                                   std.err, 
+                                   lower.tail = FALSE)
+           }, 
+         RIGHT = {
+           upper.bound <- qnorm(alpha, null.mean, std.err, lower.tail = FALSE)
+           type.two.error <- pnorm(upper.bound, 
+                                   alternate.mean, 
+                                   std.err, 
+                                   lower.tail = FALSE)
+           
+         })
+  list("tail.type" = tail.type, "type.two.error" = type.two.error)
+}
+```
+
+
+Let's test our function by using our `sample.data`.
+```{r}
+# Our function taks an alpha value so we convert rejection mean to that.
+alpha <- pnorm((rejection.mean - pop.mean) / (pop.sd / sqrt(length(sample.data))), 
+               lower.tail = FALSE)
+
+# Let's use a for-loop and hope the R gods won't smite us
+# At least it reduce code bloat
+res <- data.frame()
+for(case in c("Right", "Left", "Two")) {
+  res <- append(res, TypeTwoError(test.data = sample.data, 
+                                             null.mean = pop.mean, 
+                                             null.sd = pop.sd, 
+                                             alpha = alpha,
+                                             tail.type = case))
+}
+res <- data.frame(res, check.names = FALSE)
+kable(res)
+```
+
+Now that we have our function `TypeTwoError` working, let's assume we had a larger sample.
+```{r}
+res <- data.frame()
+for(case in c("Right", "Left", "Two")) {
+  res <- append(res, TypeTwoError(test.data = sample.data, 
+                                             null.mean = pop.mean, 
+                                             null.sd = pop.sd, 
+                                             alpha = alpha, 
+                                             sample.size = 200,
+                                             tail.type = case))
+}
+res <- data.frame(res, check.names = FALSE)
+kable(res)
+```
+
+As shown in the results above, Type II error decreases as sample size increases. Consequently, power of test increases as Type II error decreases.
+
+### Repeat numeric Type II calculation multiple times
+Finally, let's repeat the Type II error calculation a large number of times.
+```{r}
+num.trials <- 10000
+
+for(case in c("Right", "Left", "Two")) {
+ results.vec <- replicate(num.trials, 
+                          TypeTwoError(test.data = rnorm(sample.size, mean = pop.mean, 
+                                                         sd = pop.sd), 
+                                       null.mean = pop.mean, 
+                                       null.sd = pop.sd, 
+                                       alpha = alpha, 
+                                       sample.size = 200, 
+                                       tail.type = case)$type.two.error, 
+                          simplify = TRUE) 
+ hist(results.vec, main = paste0(case, " Tailed Test"), xlab = "Type II Error")
+ print(summary(results.vec))
+}
 ```
