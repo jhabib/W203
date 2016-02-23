@@ -49,7 +49,7 @@ Seed the RNG for repeatable results.
 set.seed(5000)
 ```
 
-# 2. Test p value calculator
+# 2. Test p-value calculator
 2. Choose a sample size and then use `rnorm(n, mean, sd)` to generate a random sample and test your function.
 ```{r}
 pop.mean <- 50
@@ -73,7 +73,7 @@ kable(data.frame(myfun(sample.data, mu = pop.mean, pop.sd = pop.sd, two.tailed =
 
 ```
 
-# 3. Repeat p value calculator test multiple times
+# 3. Repeat p-value calculator test multiple times
 3. Use replicate or sapply (or replicate) to generate a sample and do the test multiple times (say 1000). Plot the histogram of p-values that you are getting when the Null is true. Is your function calculating Type-I errors correctly?
 ```{r}
 num.trials <- 1000
@@ -85,7 +85,7 @@ result.vec.right.tailed <- replicate(num.trials,
                                           two.tailed = FALSE, 
                                           left.tail = FALSE)$p.value, 
                                     simplify = TRUE)
-hist(result.vec.right.tailed, main = "Upper Tail Test", xlab = "p value")
+hist(result.vec.right.tailed, main = "Upper Tail Test", xlab = "p-value")
 
 result.vec.left.tailed <- replicate(num.trials, 
                                    myfun(rnorm(sample.size, mean = pop.mean, sd = pop.sd), 
@@ -94,7 +94,7 @@ result.vec.left.tailed <- replicate(num.trials,
                                          two.tailed = FALSE, 
                                          left.tail = TRUE)$p.value, 
                                    simplify = TRUE)
-hist(result.vec.left.tailed, main = "Lower Tail Test", xlab = "p value")
+hist(result.vec.left.tailed, main = "Lower Tail Test", xlab = "p-value")
 
 
 result.vec.two.tailed <- replicate(num.trials, 
@@ -104,7 +104,7 @@ result.vec.two.tailed <- replicate(num.trials,
                                          two.tailed = TRUE, 
                                          left.tail = NULL)$p.value, 
                                    simplify = TRUE)
-hist(result.vec.two.tailed, main = "Two Tail Test", xlab = "p value")
+hist(result.vec.two.tailed, main = "Two Tail Test", xlab = "p-value")
 
 ```
 
