@@ -258,7 +258,6 @@ Let's hack together a crude function that let's us calculate Type II error. When
 ```{r}
 TypeTwoError <- function(test.data, null.mean, null.sd, alpha, 
                          sample.size = NULL, tail.type = "Two") {
-  # return(a)
   
   if(is.null(sample.size))
     sample.size <- length(test.data)
