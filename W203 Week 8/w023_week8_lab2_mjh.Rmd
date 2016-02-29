@@ -1,0 +1,19 @@
+---
+title: "W203 Week 8 Lab 2"
+author: "Mohammad Jawad Habib"
+date: "February 28, 2016"
+output: pdf_document
+---
+
+# Part 1: Multiple Choice
+1. a - Bar Graphs
+2. c - $$H_0: \mu = \mu_0; H_a: \mu > \mu_0$$
+3. f - none of the above
+4. e - Type II error will go up, Power will go down
+5. e - Raise the variable to a power greater than 1
+6. b - The standard deviation of Berkeley student ages is 2 years
+7. d - What is the probability of the data we observe, assuming that the null hypothesis is true
+8. c - Assuming your null hypothesis is actually true, and you were to repeat the experiment a large number of times, you would expect a type 1 error 4% of the time. 
+9. a - Normal sampling distribution of the test statistic. 
+10. f - None of the above
+
