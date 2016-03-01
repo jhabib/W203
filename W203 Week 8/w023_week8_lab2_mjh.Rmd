@@ -1,8 +1,12 @@
 ---
+output: pdf_document
+---
 title: "W203 Week 8 Lab 2"
 author: "Mohammad Jawad Habib"
 date: "February 28, 2016"
-output: pdf_document
+output: 
+  pdf_document:
+    latex_engine: pdflatex
 ---
 
 # Part 1: Multiple Choice
@@ -19,6 +23,9 @@ output: pdf_document
 
 
 # Part 2: Test Selection
+11. b - Levene's Test
+12. a - Shapiro-Wilk Test
+
 
 # Part 3: Data Analysis and Short Answer
 ```{r}
@@ -27,16 +34,15 @@ require(knitr)
 setwd("~/R/W203/W203 Week 8/")
 
 load("GSS.Rdata")
-# kable(head(GSS))
-head(GSS)
+
 ```
 
 ## 13. Data Import and Checking
 ### 13.a. Examine `agewed`
 ```{r}
 sort(unique(GSS$agewed))
-GSS$agewed[GSS$agewed < 18]
-GSS$agewed[GSS$agewed > 58]
+sort(unique(GSS$agewed[GSS$agewed < 18]))
+sort(unique(GSS$agewed[GSS$agewed > 58]))
 ```
 We can assume that `GSS$agewed == 0` and `GSS$agewed == 99` are not reasonable ages to get married. It would also seem that `GSS$agewed < 18` is not a reasonable age to get married. Marriageable age is 18 in most US states and most other countries, and parental consent is required in the US marry younger than that. However, let's assume that there were cases where people got married younger than 18 and consider those ages valid. It must be noted that in some backward countries like Pakistan, children are sometimes "married"" at very young ages, sometimes even at birth, without their consent. That's a horrible practice but we cannot fix that in this assignment. We can only hope that these people will come to their senses soon.
 
@@ -51,5 +57,101 @@ GSS$agewed[GSS$agewed == 99] <- NA
 agewed.mean <- mean(GSS$agewed, na.rm = TRUE)
 agewed.mean
 ```
-It can be seen that the mean `agewed` is `22.79201` when `0` and `99` are recoded as `NA`.
+It can be seen that the mean `agewed` is `r agewed.mean` when `0` and `99` are recoded as `NA`.
 
+## 14. Checking assumptions
+### 14.a. Produce a QQ plot of `agewed`
+
+We will use `qqnorm` to generate the qqplot and add a line that passes through first and third quantiles with `qqline`. The plot will ingore the values that we set to `NA`
+```{r}
+qqnorm(GSS$agewed, main = "Normal QQ Plot of agewed")
+qqline(GSS$agewed, col = 2, lwd = 2)
+```
+
+As we can see from the graph, the `agewed` variable is not normally distributed. This is because for a normal distribution, the data points will closely follow the `qqline`.
+
+### 14.b. Perform a Shapiro-Wilk Test
+We will perform a Shapiro-Wilk test to determine if `agewed` is normally distributed. The **null hypothesis** in Shapiro-Wilk test is that the variable is **normally distributed**. A significant p-value in Shapiro-Wilk test tells us that the we can reject the null hypothesis of normal distribution for the variable.
+
+```{r}
+shapres <- shapiro.test(GSS$agewed)
+shapres
+```
+We see from the above output that `p-value < 2.2e-16` which is significantly below p-value of 0.05. Therefore, we can reject the null hypothesis of normality. Here, I think the p-value is limited by `.Machine$double.eps` which happens to be `2.220446e-16` on my environment.
+
+Formally, "The agewed, W = 0.89 and p-value < 2.2e-16, was significantly non-normal."
+
+We can also use the `stat.desc` function from `pastecs` package to see if our variable fits a normal distribution.
+```{r}
+require(pastecs)
+statres <- stat.desc(GSS$agewed, basic = FALSE, norm = TRUE, p = 0.95)
+statres
+```
+The above output shows us `skew.2SE` and `kurt.2SE` which are skew and kurtosis divided by two standard errors. At a critical value of p < 0.05, we can compare these two values to 1.96/2 (0.98). As we see above both `skew.2SE` of `r statres[9]` and `kurt.2SE` of `r statres[11]` are greater than 0.98 and therefore we cannot accept that `agewed` is normally distributed. 
+
+We also get a `normtest.p` of `1.816354e-28` that is signinifcantly less than 0.05 and therefore, per Shapiro-Wilk test, we can reject the null hypothesis of normal distribution for `agewed`. As you can see, the `stat.desc` function was able to compute an actual p-value. 
+
+And finally, here's a quick histogram with a density curve for the visually minded.
+```{r}
+require(ggplot2)
+
+agewed.hist <- ggplot(GSS, aes(agewed)) + 
+  geom_histogram(aes(y = ..density..), fill = "white", colour = "black", binwidth = 2) + 
+  labs(x = "agewed", y = "Density") + 
+  stat_function(fun = dnorm, args = list(mean = mean(GSS$agewed, na.rm = TRUE), 
+                                         sd = sd(GSS$agewed, na.rm = TRUE)), colour = "red", size = 1)
+agewed.hist
+```
+As you can see that histogram is leptokurtic and has a positive skew.
+
+### 14.c. What is the variance for `agewed` for men and women
+Let's calculate variance for men.
+```{r}
+agewed.var.men <- var(GSS$agewed[GSS$sex == "Male"], na.rm = TRUE)
+agewed.var.men
+```
+The variance in `agewed`for men is `r agewed.var.men`.
+
+Let's repeat the same process for women.
+```{r}
+agewed.var.women <- var(GSS$agewed[GSS$sex == "Female"], na.rm = TRUE)
+agewed.var.women
+```
+The variance in `agewed` for women is `r agewed.var.women`.
+
+### 14.d. Perform a Levene's Test for `agewed`
+14.d.i. Levene's test assumes homogeneity of variance in different groups under test. In our case the **null hypothesis** is that variance are equal in `agewed` for men and women.
+
+We will use the `leveneTest` function from `car` package for our test.
+
+```{r}
+require(car)
+
+lr <- leveneTest(y = GSS$agewed, group = GSS$sex)
+lr
+```
+
+14.d.ii. In `leveneTest` we can assume that the result is significant if the value shown under Pr(>F) is **less than** 0.05. Our result shows a Pr(>F) value of `0.3272` meaning that the result is non-significant. That is, we cannot reject the homogeneity of variances between `agewed` for men and women.
+
+Formally, "For `agewed`, the variances were similar for men and women, 1200) = `0.3272`".
+
+## 15. More hypothesis testing
+Assumptions: Age of marriage in population has mean = 23 and sd = 5.
+
+15.a.i. Null hypothesis is that mean = 23, and alternative hypothesis is that mean does not equal 23 (two-tailed test).
+$$H_0 : \mu_0 = 23, H_a : \mu_a != 23$$
+
+15.a.ii. Let's calculate the p-value using a two-tailed test.
+```{r}
+mu.0 <- 23 # population mean
+sd.0 <- 5 # population standard deviation
+
+z.value <- (mean(GSS$agewed, na.rm = TRUE) - mu.0) / (sd.0 / sqrt(length(GSS$agewed[!is.na(GSS$agewed)])))
+z.value 
+
+p.value <- pnorm(-abs(z.value), lower.tail = TRUE) * 2
+p.value
+
+ifelse(p.value < 0.025, TRUE, FALSE) # Reject Null Hypothesis or not
+```
+From the calculation above, we get a z-score of `r z.value` which corresponds to a p-value of `r p.value` for a two-tailed test. At a significance level of p = 0.05 we fail to reject the null hypothesis that population mean is 23.
