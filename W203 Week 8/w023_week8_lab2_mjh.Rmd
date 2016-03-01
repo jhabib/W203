@@ -17,3 +17,39 @@ output: pdf_document
 9. a - Normal sampling distribution of the test statistic. 
 10. f - None of the above
 
+
+# Part 2: Test Selection
+
+# Part 3: Data Analysis and Short Answer
+```{r}
+require(knitr)
+
+setwd("~/R/W203/W203 Week 8/")
+
+load("GSS.Rdata")
+# kable(head(GSS))
+head(GSS)
+```
+
+## 13. Data Import and Checking
+### 13.a. Examine `agewed`
+```{r}
+sort(unique(GSS$agewed))
+GSS$agewed[GSS$agewed < 18]
+GSS$agewed[GSS$agewed > 58]
+```
+We can assume that `GSS$agewed == 0` and `GSS$agewed == 99` are not reasonable ages to get married. It would also seem that `GSS$agewed < 18` is not a reasonable age to get married. Marriageable age is 18 in most US states and most other countries, and parental consent is required in the US marry younger than that. However, let's assume that there were cases where people got married younger than 18 and consider those ages valid. It must be noted that in some backward countries like Pakistan, children are sometimes "married"" at very young ages, sometimes even at birth, without their consent. That's a horrible practice but we cannot fix that in this assignment. We can only hope that these people will come to their senses soon.
+
+### 13.b. Recode unreasobale `agewed` as NA
+```{r}
+# As noted before, we will only recode 0 and 99 
+# Yes, we're predujiced against the very old when it comes to marriage
+GSS$agewed[GSS$agewed == 0] <- NA
+GSS$agewed[GSS$agewed == 99] <- NA
+
+# Calculate the mean, ignoring NA
+agewed.mean <- mean(GSS$agewed, na.rm = TRUE)
+agewed.mean
+```
+It can be seen that the mean `agewed` is `22.79201` when `0` and `99` are recoded as `NA`.
+
