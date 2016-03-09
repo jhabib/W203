@@ -1,6 +1,7 @@
 getwd()
 setwd("W203 Week 9")
 
+install.packages("akima")
 install.packages("WRS", repos="http://R-Forge.R-project.org")
 
 library(ggplot2)
@@ -73,9 +74,9 @@ sw.summary <- rbind(sw.summary, c("real",
 
 sw.summary[2, 2:6] <- as.numeric(sw.summary[2, 2:6])
 
-ggplot(data = sw.summary, aes(x = sw.summary$group, y = as.numeric(sw.summary$mean))) + 
-  geom_bar(stat = "identity", position = position_dodge(), fill = "indianred") + 
-  geom_errorbar(aes(ymin = as.numeric(sw.summary$mean) - as.numeric(sw.summary$me), ymax = as.numeric(sw.summary$mean) + as.numeric(sw.summary$me)))
+# ggplot(data = sw.summary, aes(x = sw.summary$group, y = as.numeric(sw.summary$mean))) + 
+#   geom_bar(stat = "identity", position = position_dodge(), fill = "indianred") + 
+#   geom_errorbar(aes(ymin = as.numeric(sw.summary$mean) - as.numeric(sw.summary$me), ymax = as.numeric(sw.summary$mean) + as.numeric(sw.summary$me)))
 
 
 # spiderw.long <- reshape(spiderWide, varying = c("picture", "real"), idvar = "participant", direction = "long")
@@ -111,3 +112,25 @@ spiderWide$picture_adj <- spiderWide$picture + spiderWide$adj
 spiderWide$real_adj <- spiderWide$real + spiderWide$adj
 
 spiderWide$pMean2 <- (spiderWide$picture_adj + spiderWide$real_adj) / 2
+
+spiderWide
+
+spiderWide.Long <- melt(spiderWide[, c(3, 6, 7)], id.vars = c("participant"))
+spiderWide.Long
+
+
+spiderWide.Long.Summary <- with(spiderWide.Long, 
+                                data.frame(group = levels(variable), 
+                                           mean = tapply(value, variable, mean), 
+                                           n = tapply(value, variable, length), 
+                                           sd = tapply(value, variable, sd)))
+spiderWide.Long.Summary
+spiderWide.Long.Summary$stderr <- spiderWide.Long.Summary$sd / sqrt(spiderWide.Long.Summary$n)
+spiderWide.Long.Summary$me <- qt(1 - 0.05/2, df = spiderWide.Long.Summary$n) * spiderWide.Long.Summary$stderr
+
+
+ggplot(spiderWide.Long.Summary, aes(x = group, y = mean)) + 
+  geom_bar(stat = "identity", fill = "grey", position = position_dodge()) + 
+  geom_errorbar(aes(ymin = mean - me, ymax = mean + me))
+
+
