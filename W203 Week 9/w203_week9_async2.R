@@ -3,6 +3,7 @@ setwd("W203 Week 9")
 
 install.packages("akima")
 install.packages("WRS", repos="http://R-Forge.R-project.org")
+install.packages("pastecs")
 
 library(ggplot2)
 library(pastecs)
