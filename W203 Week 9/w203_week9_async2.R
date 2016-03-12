@@ -133,4 +133,56 @@ ggplot(spiderWide.Long.Summary, aes(x = group, y = mean)) +
   geom_bar(stat = "identity", fill = "grey", position = position_dodge()) + 
   geom_errorbar(aes(ymin = mean - me, ymax = mean + me))
 
+lm(data = spiderLong, formula = Anxiety ~ Group)
+
+??"yuen"
+
+yuen(spiderWide$real, spiderWide$picture)
+
+yuenbt(spiderWide$real, spiderWide$picture, nboot = 2000, side = TRUE)
+
+pb2gen(spiderWide$real, spiderWide$picture, alpha = 0.05, nboot = 2000, est = mom)
+
+ind.t.test <- t.test(spiderWide$real, spiderWide$picture)
+ind.t.test$statistic[[1]]
+ind.t.test$parameter[[1]]
+
+t <- ind.t.test$statistic[[1]]
+df <- ind.t.test$parameter[[1]]
+
+r <- sqrt(t^2 / (t^2 + df))
+r
+round(r, 3)
+
+dep.t.test <- t.test(spiderWide$real, spiderWide$picture, paired = TRUE)
+dep.t.test
+
+ind.t.test
+
+t <- dep.t.test$statistic[[1]]
+t
+df <- dep.t.test$parameter[[1]]
+df
+effect.size <- sqrt(t^2 / (t^2 + df))
+effect.size
+round(effect.size, 3)
+
+
+board <- read.delim("Board&Fritzon(2005).dat")
+View(board)
+
+install.packages("gmodels")
+install.packages("MASS")
+
+
+library(gmodels)
+library(MASS)
+
+install.packages("clinfun")
+install.packages("pgirmess")
+
+library(clinfun)
+library(ggplot2)
+library(pastecs)
+library(pgirmess)
 

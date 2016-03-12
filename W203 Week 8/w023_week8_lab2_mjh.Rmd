@@ -1,12 +1,12 @@
 ---
-output: pdf_document
+output: 
+  pdf_document: 
+    latex_engine: xelatex
 ---
 title: "W203 Week 8 Lab 2"
 author: "Mohammad Jawad Habib"
-date: "February 28, 2016"
-output: 
-  pdf_document:
-    latex_engine: pdflatex
+date: "March 1, 2016"
+output: pdf_document
 ---
 
 # Part 1: Multiple Choice
@@ -17,8 +17,8 @@ output:
 5. e - Raise the variable to a power greater than 1
 6. b - The standard deviation of Berkeley student ages is 2 years
 7. d - What is the probability of the data we observe, assuming that the null hypothesis is true
-8. c - Assuming your null hypothesis is actually true, and you were to repeat the experiment a large number of times, you would expect a type 1 error 4% of the time. 
-9. a - Normal sampling distribution of the test statistic. 
+8. c - Assuming your null hypothesis is actually false, your p-value is likely to decrease as you increase your sample size
+9. d - Independence of observations
 10. f - None of the above
 
 
@@ -31,7 +31,7 @@ output:
 ```{r}
 require(knitr)
 
-setwd("~/R/W203/W203 Week 8/")
+setwd("~/Exploring and Analyzing Data/W203 Async/W203 Week 8/")
 
 load("GSS.Rdata")
 
