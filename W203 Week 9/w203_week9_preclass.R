@@ -49,6 +49,18 @@ expense.plot
 expense.lm <- lm(senate.expense$Spent.Millions ~ senate.expense$Raised.Millions)
 expense.lm
 
+library(car)
+
+names(senate.expense)
+
+leveneTest(senate.expense$Raised.Millions, senate.expense$Senator)
+
+library(reshape2)
+
+senate.long <- melt(senate.expense[, 1:3])
+
+leveneTest(senate.long$value, senate.long$variable)
+
 # Let's use a repeated-measures design because the same Senator 
 # Raised and Spent the money
 expense.dependent.t.test <- t.test(senate.expense$Raised.Millions, 
@@ -75,11 +87,15 @@ senate.party <- senate.data[senate.data$"Gender" == "Female",
 names(senate.party) <- c("Senator", "Party", "Raised.Millions")
 head(senate.party)
 
+hist(senate.party[senate.party$Party == "Republican",]$Raised.Millions)
+
 party.independent.t.test <- t.test(Raised.Millions ~ Party, 
                                    data = senate.party, 
                                    paired = FALSE,
                                    alternative = "two.sided")
 party.independent.t.test
+
+
 # we see from the above that t(17.10) = 3.25, p < 0.01.
 # we can reject the null hypothesis that there is no difference between 
 # the money raised by female democrat and female republican senators
