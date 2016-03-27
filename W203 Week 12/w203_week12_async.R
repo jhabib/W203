@@ -20,20 +20,12 @@ plot(model)
 # Test for Large Residuals
 outlierTest(model)
 
-<<<<<<< HEAD
 # Durbin-Watson Test for autocorrelations
-=======
-# Durbin-Watson Test
->>>>>>> 243831c383cfd4f9d24a0e2361ffc5f82e223b62
 dwt(model)
 
 library(lmtest)
 
-<<<<<<< HEAD
 # Breusch-Pagan Test for Heteroscedasticity
-=======
-# Breusch-Pagan Tesst
->>>>>>> 243831c383cfd4f9d24a0e2361ffc5f82e223b62
 bptest(model)
 
 
@@ -63,7 +55,6 @@ bptest(model)
 
 coeftest(logmodel, vcov = vcovHC)
 coeftest(model, vcov = vcovHC)
-<<<<<<< HEAD
 
 install.packages("QuantPsyc")
 library(QuantPsyc)
@@ -78,6 +69,5 @@ plot(albumSales.1)
 summaryAlbumSales.1 <- summary(albumSales.1)
 sqrt(summaryAlbumSales.1$r.squared)
 
+#scatter plot of album sales vs album adverts
 scatterplot(x = album1$adverts, y = album1$sales)
-=======
->>>>>>> 243831c383cfd4f9d24a0e2361ffc5f82e223b62
