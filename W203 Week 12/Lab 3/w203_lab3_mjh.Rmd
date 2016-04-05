@@ -1,0 +1,215 @@
+---
+title: "W203 Lab 3"
+author: "Mohammad Jawad Habib"
+date: "April 3, 2016"
+output: pdf_document
+---
+
+# Part 1: Multiple Choice
+Q1 : b
+Q2 : b, c 
+Q3 : b
+Q4 : c
+Q5 : d
+Q6 : a
+Q7 : b
+Q8 : b
+
+# Part 2: Test Selection
+Q9 : e, Chi-square test
+Q10: d, ANOVA
+Q11: a, t-test
+Q12: b, Pearson correlation
+Q13: d, Chi-square test
+
+
+# Part 3: Data Analysis and Short Answer
+```{r}
+# setwd("W203 Week 12/Lab 3")
+load("GSS.Rdata")
+```
+
+## 14. Task 1: Chi-Square Test on Marital Status and Political Orientation
+
+###A. Null and Alternative Hypothesis
+H0: marital status and political orientation are independent
+H1: marital status and poliical orientation are not independent (that is, knowning about marital status can help predict the political orientation).
+
+We can assume that the various marital statuses are independent of each other i.e. one person is not married and widowed at the same time. We can assume independence for political categorization as well.
+
+We will also see below that none of the expected frequencies are below 5.
+
+```{r}
+mp <- data.frame(GSS$marital, GSS$politics)
+
+# remove the value coded as "NA" from "marital"
+mp$GSS.marital[mp$GSS.marital == "NA"] <- NA
+
+# remove "NA" as a factor from marital
+mp$GSS.marital <- factor(mp$GSS.marital, 
+                         c("married", "widowed", "divorced", "separated", "never married"))
+
+# remove all rows that have NA for "marital" or "politics"
+mp <- mp[complete.cases(mp),]
+
+# run the Chi Square test
+mpcs <- chisq.test(table(mp))
+
+# see that no expected frequencies are below 5
+mpcs$expected
+
+```
+
+###B. Test Statistics and p-value
+We get a test statistic and p-value as follows:
+```{r}
+# test statistic
+mpcs$statistic
+
+# p-value
+mpcs$p.value
+```
+
+Given the p-value above we can reject the null hypothesis. We can say that marital status does seem to be related to political orientation.
+
+###C. Effect Size Calculation
+We will use Cramer's V for the effect size.
+```{r}
+cv <- sqrt(mpcs$statistic / (length(mp$GSS.marital)*min(nrow(mpcs$observed) - 1, ncol(mpcs$observed) - 1)))
+names(cv) <- "Cramer's V"
+cv
+```
+
+###D. Interpretation
+Our Chi-Square test reveals that "politics" is significantly related to "marital" status: $$\chi^2 (16) = 44.225, p < 0.01$$. The contingency table is shown below.
+```{r}
+mpcs$observed
+```
+
+We can also see from the standardized residuals which ones are significant outside of +/- 1.96 (p < 0.05).
+```{r}
+mpcs$stdres > 1.96 | mpcs$stdres < -1.96
+```
+Being "married" is significantly related with "Conservative" political view.
+"widowed" is not significantly related with any political view.
+"divorced" is significantly related with "Conservative".
+"separated" is significantly related with "Moderate" and "Conservative".
+"never married" is significantly related with "Liberal" and "Conservative".
+
+
+## 15. Task 2: Pearson Correlation on Age when Married and Hours of TV watched
+
+###A. Null and Alternative Hypothesis
+H0: there is no relationship between agewed and tvhours (r = 0)
+H1: there is a positive or negative relationship between agewed and tvhours
+
+###B. Test Statistics and p-value
+GSS website is not very clear on how missing values in `agewed` and `tvhours` are coded. For `agewed` let's assume that 0 and 99 are dummy values. for `tvhours` we can assume that anything greater than 24 is a dummy value because there are only 24 hours in the day.
+
+Note: our sample size is large so we can assume normality of our sampling distribution. This assumption is required for establishing whether correlation coefficient is significant.
+
+```{r, warning=FALSE, message=FALSE}
+at <- data.frame(GSS$agewed, GSS$tvhours)
+at <- at[!(at$GSS.agewed %in% c(0, 99)) & at$GSS.tvhours <= 24,]
+
+library(Hmisc)
+
+atpc <- rcorr(as.matrix(at))
+atpc
+
+cor.test(at$GSS.agewed, at$GSS.tvhours)
+```
+
+
+From the above, we get a test statistic (r) of -0.03 and a p-value of 0.3009. And we get a 95% confidence interval that passes through zero (-0.087, 0.027)
+
+###C. Interpretation
+The results indicate that agewed is not correlated with tvhours. We also get $$r^2 = 9e-04$$ which means that only 0.09% of variability is shared between agewed and tvhours.
+
+I ran `shapiro.wilk` on `agewed` and `tvhours` and the two are not normally distributed. We can also check this by `hist`. Therefore, I'm going to run a Kendall's Tau. Note: we relied on a large sample size before to assume normality but we don't need that assumption with the non-parametric Kendall's Tau. I did not use Spearman because of ties in ranked data and I also did not use bootstrapping (which would be trivial anyways).
+```{r}
+cor.test(at$GSS.agewed, at$GSS.tvhours, method = "kendall")
+```
+Even though p < 0.01, the tau is -0.06 which shows that there may be a weak negative relationship between agewed and tvhours.
+
+## 16. Wilcox Rank-Sum on Marital Status and Number of Children for 23 year olds
+
+We will remove the observation where marital value is set to "NA" and use the rest of the data for our analysis. We will also subset the data for age==23 aftewards (we could do this before too). 
+```{r}
+mc <- GSS[, c("age", "marital", "childs")]
+mc$marital[mc$marital == "NA"] <- NA
+mc$marital <- factor(mc$marital, 
+                     c("married", "widowed", "divorced", "separated", "never married"))
+mc <- mc[complete.cases(mc),]
+
+mc$married <- ifelse(mc$marital == "married", 1, 0)
+# mc$married <- factor(mc$married, c("married", "not married"))
+
+# just keep those who are 23
+mc <- mc[mc$age == 23,]
+
+
+```
+
+### A. Mean of Married Variable
+```{r}
+sum(mc$married) / length(mc$married)
+
+```
+The proportion of observations coded married = 1 is 0.286 in our subset.
+
+### B. Null and Alternative Hypothesis
+H0: median number of children is the same for married and non-married 23-year olds
+H1: median number of children is not equal for married and non-married 23-year olds
+
+### C. Test Statistic and p-value
+```{r}
+# mc$married <- factor(mc$married, c("married", "not married"))
+mcwrs <- wilcox.test(childs ~ as.factor(married), data = mc, exact = FALSE)
+mcwrs
+```
+From the above test, we see that W = 19 and p = 0.000266 (p < 0.01).
+
+### D. Calculate Effect Size
+```{r}
+z <- qnorm(mcwrs$p.value/2)
+r <- z/sqrt(length(mc$married))
+r
+```
+We see from the above that the effect size r is -0.689 which is conventionally considered a large effect (above 0.5).
+
+###E. Interpretation
+Our results show that number of children in married 23-year olds (Mdn = 1) differed significantly from unmarried 23-year olds (Mdn = 0), W=19, p = 0.000266, r = -0.689. That is married 23-year olds had significantly more children than unmarried ones.
+
+## Task 4: ANOVA on Religious Affiliation and Age When Married
+
+### A. Null and Alternative Hypothesis
+H0: mean age when married is the same across all religious affiliation
+H1: mean age when married is NOT the same across all religious affiliation
+
+### B. Test Statistic and p-value
+We will remove the observations where agewed equals 0 or 99. We will also remove the observations where relig is NA or DK (per the GSS website).
+```{r}
+ar <- data.frame(GSS$agewed, GSS$relig)
+ar <- ar[!(ar$GSS.agewed %in% c(0, 99)) & !(ar$GSS.relig %in% c("NA", "DK")),]
+
+ar$GSS.relig <- factor(ar$GSS.relig, 
+                       c("Protestant", "Catholic", "Jewish", "None", "Other"))
+names(ar) <- c("agewed", "relig")
+
+library(ggplot2)
+
+arp <- ggplot(ar, aes(relig, agewed)) + 
+  stat_summary(fun.y = mean, geom = "line", size = 0.5, aes(group = 1), colour = "#990000") + 
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", 
+               width = 0.2, size = 0.5, colour = "#990000") + 
+  stat_summary(fun.y = mean, geom = "point", size = 3, colour = "#FF6633")
+arp
+
+```
+The errorbars for protestants do not overlap with errorbars of catholic, jewish and other.
+
+```{r}
+require(pastecs)
+by(ar$agewed, ar$relig, stat.desc)
+```
