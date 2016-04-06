@@ -65,3 +65,24 @@ boxplot(cmusic.complete$age ~ cmusic.complete$country, na.action = na.exclude)
 ?boxplot
 
 unique(cmusic.complete$country)
+
+unique(GSS$sibs)
+d <- data.frame(GSS$relig, GSS$sex, GSS$sibs)
+head(d)
+d <- d[d$GSS.relig == "Catholic",]
+head(d)
+d <- d[!(d$GSS.sibs %in% c(98, 99)),]
+unique(d$GSS.sibs)
+hist(d$GSS.sibs[d$GSS.sex == "Male"])
+
+hist(d$GSS.sibs[d$GSS.sex == "Female"])
+
+
+shapiro.test(d$GSS.sibs[d$GSS.sex == "Male"])
+
+shapiro.test(d$GSS.sibs[d$GSS.sex == "Female"])
+
+
+
+unique(GSS$educ)
+unique(GSS$tvhours)

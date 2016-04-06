@@ -6,21 +6,21 @@ output: pdf_document
 ---
 
 # Part 1: Multiple Choice
-Q1 : b
-Q2 : b, c 
-Q3 : b
-Q4 : c
-Q5 : d
-Q6 : a
-Q7 : b
-Q8 : b
+- Q1 : b
+- Q2 : b, c 
+- Q3 : b
+- Q4 : c
+- Q5 : d
+- Q6 : a
+- Q7 : b
+- Q8 : b
 
 # Part 2: Test Selection
-Q9 : e, Chi-square test
-Q10: d, ANOVA
-Q11: a, t-test
-Q12: b, Pearson correlation
-Q13: d, Chi-square test
+- Q9 : e, Chi-square test
+- Q10: d, ANOVA
+- Q11: c, Wilcoxon Rank-Sum Test
+- Q12: b, Pearson correlation
+- Q13: d, Chi-square test
 
 
 # Part 3: Data Analysis and Short Answer
