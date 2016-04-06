@@ -268,6 +268,8 @@ We can see from the above that Protestant-Catholic (p < 0.01), Protestant-Jewish
 We can also calculate the desired effect sizes (Cohen's D).
 ```{r}
 # Effect Size Calculation
+require(lsr)
+
 # Protestant-Catholic
 d <- ar[ar$relig %in% c("Protestant", "Catholic"),]
 d$relig <- factor(d$relig, c("Protestant", "Catholic"))
