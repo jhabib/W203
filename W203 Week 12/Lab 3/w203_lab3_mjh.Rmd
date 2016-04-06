@@ -47,7 +47,8 @@ mp$GSS.marital[mp$GSS.marital == "NA"] <- NA
 
 # remove "NA" as a factor from marital
 mp$GSS.marital <- factor(mp$GSS.marital, 
-                         c("married", "widowed", "divorced", "separated", "never married"))
+                         c("married", "widowed", "divorced", "separated", 
+                           "never married"))
 
 # remove all rows that have NA for "marital" or "politics"
 mp <- mp[complete.cases(mp),]
@@ -132,14 +133,15 @@ cor.test(at$GSS.agewed, at$GSS.tvhours, method = "kendall")
 ```
 Even though p < 0.01, the tau is -0.06 which shows that there may be a weak negative relationship between agewed and tvhours.
 
-## 16. Wilcox Rank-Sum on Marital Status and Number of Children for 23 year olds
+## 16. Task 3: Wilcox Rank-Sum on Marital Status and Number of Children for 23 year olds
 
 We will remove the observation where marital value is set to "NA" and use the rest of the data for our analysis. We will also subset the data for age==23 aftewards (we could do this before too). 
 ```{r}
 mc <- GSS[, c("age", "marital", "childs")]
 mc$marital[mc$marital == "NA"] <- NA
 mc$marital <- factor(mc$marital, 
-                     c("married", "widowed", "divorced", "separated", "never married"))
+                     c("married", "widowed", "divorced", "separated", 
+                       "never married"))
 mc <- mc[complete.cases(mc),]
 
 mc$married <- ifelse(mc$marital == "married", 1, 0)
@@ -181,7 +183,7 @@ We see from the above that the effect size r is -0.689 which is conventionally c
 ###E. Interpretation
 Our results show that number of children in married 23-year olds (Mdn = 1) differed significantly from unmarried 23-year olds (Mdn = 0), W=19, p = 0.000266, r = -0.689. That is married 23-year olds had significantly more children than unmarried ones.
 
-## Task 4: ANOVA on Religious Affiliation and Age When Married
+## 17. Task 4: ANOVA on Religious Affiliation and Age When Married
 
 ### A. Null and Alternative Hypothesis
 H0: mean age when married is the same across all religious affiliation
@@ -189,7 +191,7 @@ H1: mean age when married is NOT the same across all religious affiliation
 
 ### B. Test Statistic and p-value
 We will remove the observations where agewed equals 0 or 99. We will also remove the observations where relig is NA or DK (per the GSS website).
-```{r}
+```{r, warning=FALSE, message=FALSE}
 ar <- data.frame(GSS$agewed, GSS$relig)
 ar <- ar[!(ar$GSS.agewed %in% c(0, 99)) & !(ar$GSS.relig %in% c("NA", "DK")),]
 
@@ -197,10 +199,11 @@ ar$GSS.relig <- factor(ar$GSS.relig,
                        c("Protestant", "Catholic", "Jewish", "None", "Other"))
 names(ar) <- c("agewed", "relig")
 
-library(ggplot2)
+require(ggplot2)
 
 arp <- ggplot(ar, aes(relig, agewed)) + 
-  stat_summary(fun.y = mean, geom = "line", size = 0.5, aes(group = 1), colour = "#990000") + 
+  stat_summary(fun.y = mean, geom = "line", size = 0.5, aes(group = 1), 
+               colour = "#990000") + 
   stat_summary(fun.data = mean_cl_boot, geom = "errorbar", 
                width = 0.2, size = 0.5, colour = "#990000") + 
   stat_summary(fun.y = mean, geom = "point", size = 3, colour = "#FF6633")
@@ -209,7 +212,76 @@ arp
 ```
 The errorbars for protestants do not overlap with errorbars of catholic, jewish and other.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 require(pastecs)
 by(ar$agewed, ar$relig, stat.desc)
+
+require(car)
+leveneTest(ar$agewed ~ ar$relig, center = median)
+
+by(ar$agewed, ar$relig, shapiro.test)
+
 ```
+The non-significant Levene Test above shows that we have homogeneity of variance.
+We do not have normally distributed groups for Protestant, Catholic and None. We do have normally distributed groups for Jewish and Other.
+
+Section 10.3.2 of our text book says that F-statistic controls Type I error well under conditions of non-normality. Power of F-statistic is also relatively unaffected by non-normality per our text book when group sizes are equal. Unfortunately, that is not the case so we will stick with a robust ANOVA as described in section 10.6.6.3 of our text book.
+
+```{r, warning=FALSE, message=FALSE}
+require(WRS)
+
+arwide <- unstack(ar, agewed ~ relig)
+
+# resample to make groups sizes equal
+arwide <- data.frame(lapply(arwide, sample, size  = 30, replace = TRUE))
+
+# t1way
+levels(arwide)
+
+WRS::med1way(arwide)
+WRS::t1waybt(arwide, nboot = 2000)
+
+```
+We have a non-significant result for median age by religion and a marginally significant result for mean.
+
+Using the results from t1waybt above, we get a test statistic (F) of 3.380 and p.value of 0.042. From the med1way we get a test statistic (F) of 1.69 and p.value of 0.09.
+
+### C. Statistical Differences Between Individual Pairs
+Since we did not have any directional hypothesis beforehand, we will run post-hoc tests.
+
+```{r}
+arpt <- pairwise.t.test(ar$agewed, ar$relig, paired = FALSE, p.adjust.method = "bonferroni")
+arpt
+```
+
+Result table (`pairwise.t.test`) above shows that Catholic-Protestant (p < 0.01), Jewish-Protestant (p < 0.05) and Other-Protestant (p < 0.05) had significantly different age at wedding.
+
+### D. Evaluate Hypothesis
+We need to know the p-value and confidence interval to evaluate our hypothesis.
+```{r}
+amodel <- aov(agewed ~ relig, ar)
+TukeyHSD(amodel)
+```
+
+We can see from the above that Protestant-Catholic (p < 0.01), Protestant-Jewish (p < 0.05), Protestant-Other (p < 0.05) have 95% confidence intervals that do not pass through zero.
+
+We can also calculate the desired effect sizes (Cohen's D).
+```{r}
+# Effect Size Calculation
+# Protestant-Catholic
+d <- ar[ar$relig %in% c("Protestant", "Catholic"),]
+d$relig <- factor(d$relig, c("Protestant", "Catholic"))
+cohensD(agewed ~ relig, data = d)
+
+# Protestant-Jewish
+d <- ar[ar$relig %in% c("Protestant", "Jewish"),]
+d$relig <- factor(d$relig, c("Protestant", "Jewish"))
+cohensD(agewed ~ relig, data = d)
+
+# Protestant-Other
+d <- ar[ar$relig %in% c("Protestant", "Other"),]
+d$relig <- factor(d$relig, c("Protestant", "Other"))
+cohensD(agewed ~ relig, data = d)
+```
+As calculated above, Cohen's D indicates a significant effect size for mean age (higher) of Catholic, Jewish and Others vs. that of Protestants.
+
