@@ -26,3 +26,10 @@ library(car)
 scatterplot(hap1$outdoors, hap1$selflove, jitter = list(x  = 1, y = 1))
 
 # plot(hap1$outdoors, hap1$selflove)
+
+# c. run a linear regression
+
+hap1model <- lm(selflove ~ outdoors, data  = hap1, na.action = na.exclude)
+summary(hap1model)
+plot(hap1model)
+
