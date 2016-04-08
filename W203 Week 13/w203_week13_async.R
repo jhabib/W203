@@ -26,3 +26,7 @@ library(car)
 scatterplot(hap1$outdoors, hap1$selflove, jitter = list(x  = 1, y = 1))
 
 # plot(hap1$outdoors, hap1$selflove)
+# install.packages("sandwich")
+require(sandwich)
+hap1model <- lm(hap1$selflove ~ hap1$outdoors)
+summary(hap1model)
