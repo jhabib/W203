@@ -94,3 +94,30 @@ hist(as2$fitted.values)
 hist(album2$studentized.residuals)
 
 plot(x = as2$fitted.values, y = album2$standardized.residuals)
+
+# bootstrapping robust regression
+library(boot)
+bootReg <- function(formula, data, i) {
+  coef(lm(formula, data[i,]))
+}
+
+bootResults <- boot(statistic = bootReg, 
+                    formula = sales ~ adverts + airplay + attract, 
+                    data = album2, 
+                    R = 2000)
+bootResults
+boot.ci(bootResults, type = "bca", index = 1)
+boot.ci(bootResults, type = "bca", index = 2)        
+boot.ci(bootResults, type = "bca", index = 3)
+boot.ci(bootResults, type = "bca", index = 4)
+
+# categorical predictors and multiple regression
+gfr <- read.delim("GlastonburyFestivalRegression.dat", header = TRUE)
+head(gfr)
+
+#??"constrasts"
+contrasts(gfr$music) <- contr.treatment(4, base = 4)
+gfr$music
+
+as3 <- lm(change ~ music, data = gfr)
+summary(as3)
