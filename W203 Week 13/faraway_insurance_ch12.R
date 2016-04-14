@@ -1,7 +1,7 @@
 getwd()
-# setwd("W203 Week 13)
+setwd("W203 Week 13")
 
-install.packages("faraway")
+# install.packages("faraway")
 
 library(faraway)
 data(eco)
@@ -49,3 +49,8 @@ ch[c(6, 24), ]
 g2 <- lm(involact ~ race + fire + theft + age + log(income), data = ch, subset = (1:47)[-c(6, 24)])
 summary(g2)
 
+g3 <- lm(involact ~ race + poly(fire, 2) + poly(theft, 2) + poly(age, 2) + poly(log(income), 2), 
+         data = ch, subset = (1:47)[-c(6, 24)])
+summary(g3)
+
+anova(g2, g3)
