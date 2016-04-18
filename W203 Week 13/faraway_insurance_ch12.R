@@ -4,7 +4,7 @@ setwd("W203 Week 13")
 # install.packages("faraway")
 
 library(faraway)
-data(eco)
+whatdata(eco)
 plot(income ~ usborn, data = eco)
 iub <- lm(income ~ usborn, data = eco)
 summary(iub)
