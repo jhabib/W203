@@ -82,7 +82,7 @@ coeftest(mod, vcov = vcovHC)
 
 # Part 3. Logit
 
-likelihood <- function(y, X, b) {
+likelihood <- function(X, b) {
   return(1 / (1 + exp(-(X%*%b))))
 }
 
@@ -93,6 +93,6 @@ logit <- function(y, X, b) {
         ifelse(y == 1, likelihood(y, X, b), 1 - likelihood(y, X, b)))))
 }
 
-logit(y.bin, X, y.bin)
-
-
+loglikelihood <- function(y, X, b) {
+  y*log(likelihood(X, b) + (1 - y)*log(1 - likelihood(X, b)))
+}
