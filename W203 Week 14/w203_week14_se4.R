@@ -86,13 +86,21 @@ likelihood <- function(X, b) {
   return(1 / (1 + exp(-(X%*%b))))
 }
 
-logit <- function(y, X, b) {
-  return(
-    sum( # sum the logs of likelihood
-      log( # take a log of likelihood
-        ifelse(y == 1, likelihood(y, X, b), 1 - likelihood(y, X, b)))))
-}
+# logit <- function(y, X, b) {
+#   return(
+#     sum( # sum the logs of likelihood
+#       log( # take a log of likelihood
+#         ifelse(y == 1, (1 / (1 + exp(-b%*%X))), 1 - (1 / (1 + exp(-b%*%X)))))))
+# }
 
 loglikelihood <- function(y, X, b) {
   y*log(likelihood(X, b) + (1 - y)*log(1 - likelihood(X, b)))
 }
+
+logit <- function(X, y, b) {
+  return(-sum(y*log(likelihood(X, b) + (1 - y)*likelihood(X, b))))
+}
+
+optim(c(10, 10, 10, 10), logit, X = X, y = y.cont, method = "BFGS", hessian = TRUE)
+
+optim(y.cont, likelihood, X = X, method = "BFGS", hessian = TRUE)
