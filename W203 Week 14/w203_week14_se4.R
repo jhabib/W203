@@ -41,8 +41,9 @@ y = y.cont
 
 # Generate heteroskedastic data
 x1 <- runif(100, -1, 1)# rep(c(-1, 1), 50)
+x2 <- rnorm(100)
 err <- rnorm(100, sd = 1:10)
-y1 <- 1 + x1 + err # not sure if this is a better method
+y1 <- 1 + x1 + x2 + err # not sure if this is a better method
 
 library(lmtest)
 bptest(y1 ~ x1) # reject homoskedasticity (p > 0.05)
