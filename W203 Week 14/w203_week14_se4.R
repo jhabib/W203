@@ -15,48 +15,48 @@ X = cbind (1, M )
 y = y.cont
 # or y = y.bin , depending on the exercise
 
-# Part 1. OLS using a recursive function
-reg <- function(y, x) {
-  if (as.integer(length(x)) == 1) {
-    return(sum(x*y) / sum(x^2))
-  } else {
-      x = ifelse(length(x) > 1, x[, -length(x)], x[, length(x)])
-      return(reg(y, x))
-  }
-}
-
-pwr = function(x,i){
-  # if i==0, return 1
-  # if i>0, return x^(i-1) * x
-  # if i<0, return x^(i+1) / x
-  if (as.integer(i) == 0 ) return( 1)
-  else return(
-    ifelse( i>0, pwr(x,i-1)* x , pwr(x,i+1) /x ))
-}
-
-
-pwr(10, -3)
+# # Part 1. OLS using a recursive function
+# reg <- function(y, x) {
+#   if (as.integer(length(x)) == 1) {
+#     return(sum(x*y) / sum(x^2))
+#   } else {
+#       x = ifelse(length(x) > 1, x[, -length(x)], x[, length(x)])
+#       return(reg(y, x))
+#   }
+# }
+# 
+# pwr = function(x,i){
+#   # if i==0, return 1
+#   # if i>0, return x^(i-1) * x
+#   # if i<0, return x^(i+1) / x
+#   if (as.integer(i) == 0 ) return( 1)
+#   else return(
+#     ifelse( i>0, pwr(x,i-1)* x , pwr(x,i+1) /x ))
+# }
+# 
+# 
+# pwr(10, -3)
 
 # Part 2. OLS using numeric optimization
+
 # Generate heteroskedastic data
+x1 <- runif(100, -1, 1)# rep(c(-1, 1), 50)
+err <- rnorm(100, sd = 1:10)
+y1 <- 1 + x1 + err # not sure if this is a better method
 
-x1 <- runif(100)
-x2 <- x1*rnorm(100)
-y <- 1 + 2*x1 + rnorm(100)*x1*x2
+library(lmtest)
+bptest(y1 ~ x1) # reject homoskedasticity (p > 0.05)
 
-d <- data.frame(y, x1, x2)
+library(car)
+scatterplot(x1, y) 
 
-plot(y)
-scatterplot(x1, y)
-
-# linear model without bootstrap
-mod <- lm(y ~ x1 + x2, data = d)
-summary(mod)
-confint(mod)
+# create a data.frame for analysis
+d <- data.frame(y1, x1, x2)
 
 # use bootstrap to estimate the model
 library(boot)
 
+# copy bootReg from DSUR book
 bootReg <- function (formula, data, i)
 {
   d <- data [i,]
@@ -71,36 +71,40 @@ boot.ci(boot.r, type = "bca", index = 1)
 boot.ci(boot.r, type = "bca", index = 2)
 boot.ci(boot.r, type = "bca", index = 3)
 
+# linear model without bootstrap
+mod <- lm(y ~ x1 + x2, data = d)
+summary(mod)
+confint(mod)
+
 library(sandwich)
 library(lmtest)
 ?sandwich
 ?coeftest
 
-coeftest(mod)
-coeftest(mod, vcov = sandwich)
-coeftest(mod, vcov = vcovHC)
+coefs.sand <- coeftest(mod, vcov = sandwich)
+
+# results of lm and boot.r look similar
+cbind("boot" = boot.r$t0, "lm" = coefs.sand[, 1])
 
 # Part 3. Logit
 
-likelihood <- function(X, b) {
-  return(1 / (1 + exp(-(X%*%b))))
+# create the logit function based on equation 3 from the link below
+# http://faculty.smu.edu/tfomby/eco6352/Notes/Logit%20and%20Probit%20Notes.pdf
+logit.mine <- function(y, X, b) {
+  return(
+    -sum(y*log(1 / (1 + exp(-X %*% b))) 
+         + (1 - y)*log(1 - 1 / (1 + exp(-X %*% b))))
+    )
 }
 
-# logit <- function(y, X, b) {
-#   return(
-#     sum( # sum the logs of likelihood
-#       log( # take a log of likelihood
-#         ifelse(y == 1, (1 / (1 + exp(-b%*%X))), 1 - (1 / (1 + exp(-b%*%X)))))))
-# }
+# initialize the values of our coefficients (b)
+b.new <- c(0, 0, 0, 0) # one for each independent variable in X
+model.logit <- optim(b.new, logit.mine, X = X, y = y.bin, 
+                     method = "BFGS", hessian = TRUE)
 
-loglikelihood <- function(y, X, b) {
-  y*log(likelihood(X, b) + (1 - y)*log(1 - likelihood(X, b)))
-}
+X.new <- cbind(y.bin, X)
+model.glm <- glm(X.new[, 1] ~ X.new[, 3] + X.new[, 4] + X.new[, 5], 
+                 data = data.frame(X.new), family = binomial, x = TRUE)
 
-logit <- function(X, y, b) {
-  return(-sum(y*log(likelihood(X, b) + (1 - y)*likelihood(X, b))))
-}
-
-optim(c(10, 10, 10, 10), logit, X = X, y = y.cont, method = "BFGS", hessian = TRUE)
-
-optim(y.cont, likelihood, X = X, method = "BFGS", hessian = TRUE)
+# compare the results
+cbind("logit.coef" = model.logit$par, "glm.coef" = model.glm$coefficients)

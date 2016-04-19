@@ -9,11 +9,11 @@ urlSheatherData = "http://www.stat.tamu.edu/~sheather/book/docs/datasets/Micheli
 dfSheather = as.data.frame(read.csv(urlSheatherData, header = TRUE))
 
 # create the design matrices
-y = as.matrix(dfSheather['InMichelin'])
+y_1 = as.matrix(dfSheather['InMichelin'])
 M = as.matrix(dfSheather[c('Service','Decor', 'Food', 'Price')])
 
 # add an intercept to the predictor variables
-X = cbind(1, M)
+X_1 = cbind(1, M)
 
 logit = function(X, b) {
   return( 
@@ -34,11 +34,7 @@ b_0 = c(10, -0.1, -0.3, 0.001, 0.01) # arbitrary starting parameters
 
 # minimise the (negative) log-likelihood to get the logit fit
 optimLogit = optim(b_0, logLikelihoodLogitStable,
-                   X = X, y = y, method = 'BFGS', 
-                   hessian=TRUE)
-
-optimLogit1 = optim(b_0, logit,
-                   X = X, b = y, method = 'BFGS', 
+                   X = X_1, y = y_1, method = 'BFGS', 
                    hessian=TRUE)
 
 #================================================
