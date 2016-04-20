@@ -16,15 +16,21 @@ y = y.cont
 # or y = y.bin , depending on the exercise
 
 # # Part 1. OLS using a recursive function
-# reg <- function(y, x) {
-#   if (as.integer(length(x)) == 1) {
-#     return(sum(x*y) / sum(x^2))
-#   } else {
-#       x = ifelse(length(x) > 1, x[, -length(x)], x[, length(x)])
-#       return(reg(y, x))
-#   }
-# }
-# 
+reg <- function(y, x) {
+  print(ncol(x))
+  if (ncol(x) == 1) {
+    return(sum(x*y) / sum(x^2))
+  } else {
+      # x = ifelse(ncol(x) > 1, x[, -1], x[, 1])
+      return(reg(y, ifelse(ncol(x) > 0, x[, -1], x[, 1])))
+  }
+}
+
+xdf <- data.frame(X)
+
+reg(y.cont, xdf)
+reg(y.cont, X[, 2:4])
+
 # pwr = function(x,i){
 #   # if i==0, return 1
 #   # if i>0, return x^(i-1) * x
