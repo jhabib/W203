@@ -197,16 +197,23 @@ gms <- summary(gm)
 gms
 
 # Akaike Information Criterion
-gms$aic # AIC = 1909
+gms$aic # AIC = 1909.359
 ```
 
 ### c. Odds of urban user flirting online vs. rural user
 ```{r}
 
+# get odds ratio from the model
+exp(gm$coefficients) # Urban user is 2.10 times more likely than rural user to flirt online in sample
+
+
+# we can use the model to predict the probability of flirting online and get odds ratio for that too
 # use type = "response"" to get probabilities instead of log-odds
 pflirt.rural <- predict.glm(gm, newdata = data.frame("usr" = "Rural"), type = "response") 
-pflirt.urban <- predict.glm(gm, newdata = data.frame("usr" = "Urban"), type = "response")
+pflirt.rural
 
+pflirt.urban <- predict.glm(gm, newdata = data.frame("usr" = "Urban"), type = "response")
+pflirt.urban
 pflirt.odds <- pflirt.urban / pflirt.rural
 pflirt.odds # Urban user is 1.83 times more likely to flirt than rural user
 
