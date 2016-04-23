@@ -31,10 +31,183 @@ does not help to explain why more than 5% of the published results appear to
 be type-1 errors
 
 # Part 2. Test Selection
-Q9. a, chi-square (use_reddit ~ marital_status)
+Q9. a, chi-square (use_reddit ~ marital_status), categorilcal, nominal
+- t-test cannot be used because it requires numeric data and Gaussian distribution
+- Pearson Correlation cannot be used because it requires two variables from a Gaussian distribution
+- Wilcoxon signed rank test requires same participants in different measures; limited to two groups
 
-Q10. d, ANOVA (life_quality ~ region)
+Q10. d, ANOVA (life_quality ~ region) #Kruskal Wallis test would be better
+- Pearson correlation cannot be used because it requires two variables from a Gaussian distribution
+- Wilcoxon signed rank test requires same participants in different measures; limited to two groups
+- Binary logistic regression cannot be used because it requires Bionmial outcomes
 
-Q11. d, ANOVA (years_in_relationship ~ flirted_online)
+Q11. d, ANOVA (flirted_online ~ years_in_relationship)
+- Fisher's exact test requires two groups and two outcomes
+- t-test cannot be used because it requires numeric data and Gaussian distribution
+- Wilcoxon signed rank test requires same participants in different measures; limited to two groups
 
-Q12. 
+
+Q12. a, chi-square (lgbt ~ adults_in_household)
+- ANOVA cannot be used because it requires a normally distributed dependent variable
+- Pearson correlation cannot be used because it requires two variables from a Gaussian distribution
+- Wilcoxon rank sum test requires exactly two groups
+
+Q13. a, Pearson Correlation (totalchildren ~ age)
+
+Q14. b, Wilcoxon Rank-Sum Test
+
+# Part 3. Data Analysis
+```{r}
+dat <- read.csv("Dating.csv", header = TRUE, stringsAsFactors = FALSE)
+```
+
+## 15. OLS Regression
+
+### a. Mean of life_quality
+```{r}
+unique(dat$life_quality)
+# omit "Refused" and "Don't know" and calculate mean
+
+lq <- dat$life_quality[!dat$life_quality %in% c("Refused", "Don't know")]
+lq <- lq[!is.na(lq)]
+lq <- as.numeric(as.character(lq))
+mean(lq) # 2.607079
+
+```
+
+### b. Mean of years_in_relationship
+```{r}
+unique(dat$years_in_relationship)
+# omit "Refused", "Don't know" and " "
+# leave "0" in there
+
+yr <- dat$years_in_relationship[!dat$years_in_relationship %in% c("Refused", "Don't know", " ")]
+yr <- yr[!is.na(yr)]
+yr <- as.numeric(as.character(yr))
+mean(yr) # 13.47697
+```
+
+### c. Create a subset of data omitting missing values
+```{r}
+ds1 <- dat[, c("life_quality", "years_in_relationship", "use_internet")]
+# apply(ds1, 2, class)
+# apply(ds1, 2, levels)
+
+
+# check what's in use_internet
+unique(ds1$use_internet)
+
+# keep only complete cases
+ds1 <- apply(ds1, 2, function(x) {ifelse(x %in% c("Refused", "Don't know", " "), NA, x)})
+ds1 <- ds1[complete.cases(ds1), ]
+nrow(ds1) #1090 cases left
+ds1 <- data.frame(ds1, stringsAsFactors = FALSE) # convert to data.frame
+ds1[, 1] <- as.numeric(ds1[, 1])
+ds1[, 2] <- as.numeric(ds1[, 2])
+
+```
+
+### d. Fit an OLS model: life_quality ~ years_in_relationship
+```{r}
+lm1 <- lm(life_quality ~ years_in_relationship, data = ds1)
+
+lm1s <- summary(lm1)
+lm1s
+
+lm1s$coefficients[1] # intercept is 2.66978, p < 0.001, statistically significant
+# Intercept tells us the expected value of life_quality without any independent variable
+# So our intercept is very close to the mean value of life_quality which makes sense
+
+lm1s$coefficients[2] # slope is -0.00499, p < 0.05, statistically significant
+# however, life_quality only decreases by 0.00498 for 1 year increase in years_in_relationship
+# this is a very small effect
+
+lm1s$r.squared # R-squared = 0.00586, i.e. 0.58% of variance in life_quality explained by years_in_relationship
+
+sqrt(lm1s$r.squared) # Pearson's R = 0.07655 (< 0.30) which points to no linear correlation
+# This does not appear to be practically significant
+
+cbind("f ratio" = lm1s$fstatistic[1], "critical f value" = qf(c(0.975), 1, 1088)) # F-ratio = 6.41427 
+# F-ratio obtained before is greater than the critical value
+pf(lm1s$fstatistic[1], lm1s$fstatistic[2], lm1s$fstatistic[3], lower.tail = FALSE) * 2 # p < 0.05
+
+
+```
+
+### e. Fit a second OLS model
+```{r}
+lm2 <- lm(life_quality ~ years_in_relationship + use_internet, data = ds1)
+lm2s <- summary(lm2)
+lm2s
+
+# slope coefficient for use_internet
+lm2s$coefficients[3] # slope is -0.40374, p < 0.01, statistically significant
+lm2s$adj.r.squared # Adjusted R-squared = 0.02282, i.e. 2.28% of variance in life_quality explained by years_in_relationship & use_internet together
+sqrt(lm2s$adj.r.squared) # Pearson's R = 0.15105 (< 0.30) which points to no linear relationship
+# This does not appear to be practically significant
+
+cbind("f ratio" = lm2s$fstatistic[1], "critical f value" = qf(c(0.975), 1, 1088)) # F-ratio = 13.71293 
+# F-ratio obtained before is greater than the critical value
+pf(lm2s$fstatistic[1], lm2s$fstatistic[2], lm2s$fstatistic[3], lower.tail = FALSE) * 2 # p < 0.01
+
+```
+
+### f. F-ratio and p-value between two OLS models
+```{r}
+lmcompare <- anova(lm1, lm2)
+lmcompare
+
+```
+Using years_in_relationship and use_internet together improved the fit of the model to the data compared to years_in_relationship alone. F(1, 1087) = 20.894, p < 0.01.
+
+## Q16. Logistic Regression
+
+### a. Odds that a responded has flirted online
+```{r}
+
+ds2 <- dat[, c("usr", "flirted_online")]
+nrow(ds2)
+
+unique(ds2$flirted_online)
+unique(ds2$usr)
+
+ds2 <- apply(ds2, 2, function(x) {ifelse(x %in% c("Refused", "Don't know", " "), NA, x)})
+ds2 <- ds2[complete.cases(ds2), ]
+nrow(ds2) #1885 cases left
+ds2 <- data.frame(ds2, stringsAsFactors = FALSE) # convert to data.frame
+
+library(gmodels)
+ct <- CrossTable(ds2$flirted_online)
+ct$prop.row[2] / ct$prop.row[1] # odds ratio in sample (flirted / not flirted) = 0.26087
+
+```
+
+### b. Logistic regression: flirted_online ~ usr
+```{r}
+# convert flirted_online to factor
+# ds2$flirted_online <- factor(ds2$flirted_online)
+# ds2$flirted_online <- relevel(ds2$flirted_online, ref = "No") # convert no to base
+
+ds2$flirted <- ifelse(ds2$flirted_online == "Yes", 1, 0)
+ds2$usr <- factor(ds2$usr) # rural is the base factor
+
+gm <- glm(flirted ~ usr, data = ds2, family = binomial)
+gm
+gms <- summary(gm)
+gms
+
+# Akaike Information Criterion
+gms$aic # AIC = 1909
+```
+
+### c. Odds of urban user flirting online vs. rural user
+```{r}
+
+# use type = "response"" to get probabilities instead of log-odds
+pflirt.rural <- predict.glm(gm, newdata = data.frame("usr" = "Rural"), type = "response") 
+pflirt.urban <- predict.glm(gm, newdata = data.frame("usr" = "Urban"), type = "response")
+
+pflirt.odds <- pflirt.urban / pflirt.rural
+pflirt.odds # Urban user is 1.83 times more likely to flirt than rural user
+
+```

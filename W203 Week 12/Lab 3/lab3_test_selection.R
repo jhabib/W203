@@ -1,14 +1,22 @@
+getwd()
+# setwd("C:/Users/SP4/Documents/Exploring and Analyzing Data/W203 Async/W203 Week 12/Lab 3")
+load("GSS.Rdata")
 s <- summary(GSS$income91)
 class(s)
 hist(s, freq = FALSE, breaks = 10)
 ?hist
 
+gss1 <- cbind(GSS$income91, GSS$visitart)
+unique(gss1)
+levels(GSS$visitart)
+
 income.art <- GSS[GSS$visitart == "Yes", 14]
 hist(summary(income.art), freq = FALSE, breaks = 10)
-
+summary(income.art)
 
 income.notart <- GSS[GSS$visitart == "No", 14]
 hist(summary(income.notart), freq = FALSE, breaks = 10)
+cbind(income.art, income.notart)
 
 names(GSS)
 
