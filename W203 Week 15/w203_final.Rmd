@@ -79,141 +79,201 @@ Q13. a, Pearson Correlation (totalchildren ~ age)
 Q14. b, Wilcoxon Rank-Sum Test (number of children ~ gender of people aged 31)
 
 # Part 3. Data Analysis
+Let's load the data first.
 ```{r}
+# getwd()
+# setwd("W203 Week 15")
 dat <- read.csv("Dating.csv", header = TRUE, stringsAsFactors = FALSE)
 ```
 
 ## 15. OLS Regression
 
 ### a. Mean of life_quality
+Before we calculate the mean of `life_quality` we need to omit the missing values. Codebook shows that `life_quality` is measured on a Likert scale, and therefore "Don't know" and "Refused" can be considered missing values.
+
 ```{r}
 unique(dat$life_quality)
-# omit "Refused" and "Don't know" and calculate mean
 
+# omit "Refused" and "Don't know" and calculate mean
 lq <- dat$life_quality[!dat$life_quality %in% c("Refused", "Don't know")]
-lq <- lq[!is.na(lq)]
+lq <- lq[!is.na(lq)] # omit NA
 lq <- as.numeric(as.character(lq))
-mean(lq) # 2.607079
+
+# reverse the scale
+lq <- abs(lq - 6)
+
+# calculate the mean
+mean(lq) # 3.392921
 
 ```
 
 ### b. Mean of years_in_relationship
+We have to calculate the mean of `years_in_relationship`. We have to make sure that string values are converted to the correct number. And we have to leave the "0" in there as a valid value.
 ```{r}
-unique(dat$years_in_relationship)
+# unique(dat$years_in_relationship)
+
 # omit "Refused", "Don't know" and " "
 # leave "0" in there
-
-yr <- dat$years_in_relationship[!dat$years_in_relationship %in% c("Refused", "Don't know", " ")]
+yr <- dat$years_in_relationship[!dat$years_in_relationship %in% c("Refused", 
+                                                                  "Don't know", 
+                                                                  " ")]
 yr <- yr[!is.na(yr)]
 yr <- as.numeric(as.character(yr))
+
+# calculate the mean
 mean(yr) # 13.47697
 ```
 
 ### c. Create a subset of data omitting missing values
+We need three variables `life_quality`, `years_in_relationship` and `use_internet` in our analysis, so let's create a subset of our data. We need to remove missing values. Code book shows that `use_internet` has two valid categories "Yes" and "No" so we will keep only those two.
 ```{r}
 ds1 <- dat[, c("life_quality", "years_in_relationship", "use_internet")]
-# apply(ds1, 2, class)
-# apply(ds1, 2, levels)
-
 
 # check what's in use_internet
 unique(ds1$use_internet)
 
 # keep only complete cases
-ds1 <- apply(ds1, 2, function(x) {ifelse(x %in% c("Refused", "Don't know", " "), NA, x)})
+ds1 <- apply(ds1, 2, 
+             function(x) {ifelse(x %in% c("Refused", "Don't know", " "), 
+                                 NA, x)})
 ds1 <- ds1[complete.cases(ds1), ]
+
+# number of cases left
 nrow(ds1) #1090 cases left
+
 ds1 <- data.frame(ds1, stringsAsFactors = FALSE) # convert to data.frame
-ds1[, 1] <- as.numeric(ds1[, 1])
-ds1[, 2] <- as.numeric(ds1[, 2])
+# re-apply value conversion to `life_quality`
+ds1[, "life_quality"] <- abs(as.numeric(ds1[, "life_quality"]) - 6) 
+ds1[, "years_in_relationship"] <- 
+  as.numeric(as.character(ds1[, "years_in_relationship"]))
 
 ```
 
 ### d. Fit an OLS model: life_quality ~ years_in_relationship
+Let's run an OLS model that predicts `life_quality` as a function of `years_in_relationship`.
 ```{r}
 lm1 <- lm(life_quality ~ years_in_relationship, data = ds1)
 
 lm1s <- summary(lm1)
 lm1s
 
-lm1s$coefficients[1] # intercept is 2.66978, p < 0.001, statistically significant
-# Intercept tells us the expected value of life_quality without any independent variable
-# So our intercept is very close to the mean value of life_quality which makes sense
+# slope co-efficient (years_in_relationship)
+lm1s$coefficients[2] # slope is 0.00499
+# This represents a ~0.005 positive change in life satisfication for each 
+# 1 year increase in years_in_relationship
 
-lm1s$coefficients[2] # slope is -0.00499, p < 0.05, statistically significant
-# however, life_quality only decreases by 0.00498 for 1 year increase in years_in_relationship
-# this is a very small effect
+# slope t-value
+lm1s$coefficients[6] #t-value =2.533
+# We have a t-value = 2.533, p < 0.05 
+# which means that slope is statistically significant
 
-lm1s$r.squared # R-squared = 0.00586, i.e. 0.58% of variance in life_quality explained by years_in_relationship
+# R-squared
+lm1s$r.squared 
+# R-squared = 0.00586, i.e. 0.58% of variance 
+# in life_quality explained by years_in_relationship
 
-sqrt(lm1s$r.squared) # Pearson's R = 0.07655 (< 0.30) which points to no linear correlation
-# This does not appear to be practically significant
+# Pearson's R
+sqrt(lm1s$r.squared) 
+# Pearson's R = 0.07656 (< 0.30) which points to no linear correlation
 
-cbind("f ratio" = lm1s$fstatistic[1], "critical f value" = qf(c(0.975), 1, 1088)) # F-ratio = 6.41427 
-# F-ratio obtained before is greater than the critical value
-pf(lm1s$fstatistic[1], lm1s$fstatistic[2], lm1s$fstatistic[3], lower.tail = FALSE) * 2 # p < 0.05
+# Confidence interval of slope
+confint(lm1) # confidence interval of slope does not cross 0
 
+# For evaluating the overall model
+# F-ratio obtained before is greater than the critical F value
+cbind("f ratio" = lm1s$fstatistic[1], 
+      "critical f value" = qf(c(0.975), 1, 1088)) # F-ratio = 6.41427 
 
+# p-value of F-ratio is < 0.05
+pf(lm1s$fstatistic[1], lm1s$fstatistic[2], 
+   lm1s$fstatistic[3], lower.tail = FALSE) * 2 # p < 0.05
 ```
+Given the above information, we have a statistically significant result. Our t-value also shows that the slope coefficient is 2.533 times larger than its standard error, and we see that its confidence interval does not cross zero. Yet we have an R-squared of 0.00586 (0.58% of variance explained) and R is < 0.30. This shows that the result is NOT practically significant.
 
 ### e. Fit a second OLS model
+Let's add `use_internet` to the OLS mode.
 ```{r}
 lm2 <- lm(life_quality ~ years_in_relationship + use_internet, data = ds1)
 lm2s <- summary(lm2)
 lm2s
 
 # slope coefficient for use_internet
-lm2s$coefficients[3] # slope is -0.40374, p < 0.01, statistically significant
-lm2s$adj.r.squared # Adjusted R-squared = 0.02282, i.e. 2.28% of variance in life_quality explained by years_in_relationship & use_internet together
-sqrt(lm2s$adj.r.squared) # Pearson's R = 0.15105 (< 0.30) which points to no linear relationship
-# This does not appear to be practically significant
+lm2s$coefficients[3] # slope is 0.40374 
 
-cbind("f ratio" = lm2s$fstatistic[1], "critical f value" = qf(c(0.975), 1, 1088)) # F-ratio = 13.71293 
-# F-ratio obtained before is greater than the critical value
-pf(lm2s$fstatistic[1], lm2s$fstatistic[2], lm2s$fstatistic[3], lower.tail = FALSE) * 2 # p < 0.01
+# slope t-value (use_internet)
+lm2s$coefficients[9] #t-value = 4.571
+# We have a t-value = 4.571, p < 0.05 
+# which means that slope is statistically significant
+
+# R-squared
+lm2s$adj.r.squared # Adjusted R-squared = 0.02282 
+# i.e. 2.28% of variance in life_quality is explained by 
+# years_in_relationship & use_internet together
+
+# Pearson's R
+sqrt(lm2s$adj.r.squared) 
+# Pearson's R = 0.15105 (< 0.30) which points to no linear relationship
+
+# Confidence interval of slope
+confint(lm2) # confidence interval of slope does not cross 0
+
+# For evaluating the overall model
+cbind("f ratio" = lm2s$fstatistic[1], 
+      "critical f value" = qf(c(0.975), 1, 1088)) # F-ratio = 13.71293 
+# F-ratio obtained before is greater than the critical F value
+
+# p-value of F-ratio is less than 0.05
+pf(lm2s$fstatistic[1], lm2s$fstatistic[2], lm2s$fstatistic[3], 
+   lower.tail = FALSE) * 2 # p < 0.01
 
 ```
+We see from the above information that `use_internet` has a statistically significant slope. Yet the adjusted r-squared value explains only 2.28% of the total variation in `life_quality`. This result is not practically significant.
 
 ### f. F-ratio and p-value between two OLS models
+Let's compare our two OLS models. We will use ANOVA to compare the two.
 ```{r}
 lmcompare <- anova(lm1, lm2)
-lmcompare
-
+lmcompare # F-ratio = 20.894, p < 0.01
 ```
-Using years_in_relationship and use_internet together improved the fit of the model to the data compared to years_in_relationship alone. F(1, 1087) = 20.894, p < 0.01.
+Using `years_in_relationship` and `use_internet` together improved the fit of the model to the data compared to `years_in_relationship` alone. F(1, 1087) = 20.894, p < 0.01.
+This shows that the second model using both `years_in_relationship` and `use_internet` is significantly better than the first model.
+
 
 ## Q16. Logistic Regression
 
 ### a. Odds that a responded has flirted online
+We will use logistic regression to test the odds of `flirted_online`. Code book shows that "Refused" and "Don't know" can be omitted as missing. There are two valid categories i.e. "Yes" and "No".
 ```{r}
-
 ds2 <- dat[, c("usr", "flirted_online")]
 nrow(ds2)
 
 unique(ds2$flirted_online)
 unique(ds2$usr)
 
+# omit missing values
 ds2 <- apply(ds2, 2, function(x) {ifelse(x %in% c("Refused", "Don't know", " "), NA, x)})
 ds2 <- ds2[complete.cases(ds2), ]
 nrow(ds2) #1885 cases left
 ds2 <- data.frame(ds2, stringsAsFactors = FALSE) # convert to data.frame
 
-library(gmodels)
+require(gmodels)
+# Let's compute a simple odds ratio
 ct <- CrossTable(ds2$flirted_online)
-ct$prop.row[2] / ct$prop.row[1] # odds ratio in sample (flirted / not flirted) = 0.26087
-
+ct$prop.row[2] / ct$prop.row[1] 
+# odds ratio in sample (flirted / not flirted) = 0.26087
 ```
+The odds that someone has flirted online vs. not flirt online are 0.26087 (or approximately 1:4).
 
 ### b. Logistic regression: flirted_online ~ usr
 ```{r}
 # convert flirted_online to factor
-# ds2$flirted_online <- factor(ds2$flirted_online)
-# ds2$flirted_online <- relevel(ds2$flirted_online, ref = "No") # convert no to base
+# Let's use the base category where flirted_online equals "No"
+ds2$flirted_online <- factor(ds2$flirted_online)
+ds2$flirted_online <- relevel(ds2$flirted_online, ref = "No")
 
-ds2$flirted <- ifelse(ds2$flirted_online == "Yes", 1, 0)
 ds2$usr <- factor(ds2$usr) # rural is the base factor
 
-gm <- glm(flirted ~ usr, data = ds2, family = binomial)
+gm <- glm(flirted_online ~ usr, data = ds2, family = binomial)
 gm
 gms <- summary(gm)
 gms
@@ -221,22 +281,38 @@ gms
 # Akaike Information Criterion
 gms$aic # AIC = 1909.359
 ```
+Our model has an AIC of 1909.359.
 
 ### c. Odds of urban user flirting online vs. rural user
+The `usr` variable has three categories "Urban", "Suburban" and "Rural". So we will compare "Urban" vs. both the other categories as those two are not "Urban".
 ```{r}
 
 # get odds ratio from the model
-exp(gm$coefficients) # Urban user is 2.10 times more likely than rural user to flirt online in sample
+exp(gm$coefficients) 
+# Urban user is 2.10 times more likely than rural user to flirt online in sample
 
 
-# we can use the model to predict the probability of flirting online and get odds ratio for that too
+# we can use the model to predict the probability of flirting online 
+# and get odds ratio for that too
 # use type = "response"" to get probabilities instead of log-odds
-pflirt.rural <- predict.glm(gm, newdata = data.frame("usr" = "Rural"), type = "response") 
+
+# flirt probability of rural user
+pflirt.rural <- predict.glm(gm, newdata = data.frame("usr" = "Rural"), 
+                            type = "response") 
 pflirt.rural
 
-pflirt.urban <- predict.glm(gm, newdata = data.frame("usr" = "Urban"), type = "response")
+# flirt probability of urban user
+pflirt.urban <- predict.glm(gm, newdata = data.frame("usr" = "Urban"), 
+                            type = "response")
 pflirt.urban
+
+# flirt odds urban : rural
 pflirt.odds <- pflirt.urban / pflirt.rural
-pflirt.odds # Urban user is 1.83 times more likely to flirt than rural user
+pflirt.odds 
+# Urban user is 1.83 times more likely to flirt than rural user
 
 ```
+Odds that an Urban user has flirted online are 1.83 to 1 compared to Rural user. These odds are significantly different because without considering location the odds of flirting online are only 0.26 to 1. That is, an urban user is 7 times more likely to flirt online than a generic user in this data set. We can say that this result is practically significant.
+
+### Considering `Suburban` in the same category as `Rural`
+We can recode our data so that `usr` variable only has `Urban` and `Not Urban` categories.
