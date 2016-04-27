@@ -1,7 +1,7 @@
 getwd()
 # setwd("C:/Users/SP4/Documents/Exploring and Analyzing Data/W203 Async/W203 Week 15")
 
-d <- read.csv("Dating.csv", header = TRUE, stringsAsFactors = FALSE)
+d <- read.csv("Dating.csv", header = TRUE, stringsAsFactors = TRUE)
 head(d)
 # summary(d)
 # names(d)
@@ -48,7 +48,7 @@ dfish <- d[!d$flirted_online %in% c(" ", "Refused", "Don't know", "NA"), c("year
 dfish <- dfish[complete.cases(dfish) & !dfish$years_in_relationship %in% c("Refused", "Don't know"), ]
 
 ?fisher.test
-# fisher.test(d$years_in_relationship, factor(dfish$flirted_online))
+# fisher.test(dfish$years_in_relationship, factor(dfish$flirted_online))
 
 dfish$years_in_relationship <- as.numeric(dfish$years_in_relationship)
 dfish$flirted_online <- factor(dfish$flirted_online)
@@ -125,4 +125,4 @@ dac2a <- dac2[dac2$age == 31, c("sex", "totalchildren")]
 head(dac2a)
 hist(dac2a$totalchildren)
 
-wilcox.test(dac2a$totalchildren ~ dac2a$sex)
+wilcox.test(dac2a$totalchildren ~ dac2a$sex, exact = FALSE)
