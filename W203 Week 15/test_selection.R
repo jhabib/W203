@@ -84,7 +84,7 @@ library(gmodels)
 CrossTable(dso$adults_in_household, dso$lgbt)
 ?wilcox.test
 wilcox.test(dso$adults_in_household ~ dso$lgbt)
-adso <- aov(dso$adults_in_household ~ dso$lgbt)
+adso <- aov(dso$adults_in_household ~ dso$lgbt, contrasts = "contr.helmert")
 summary(adso)
 
 # We have homogeneity of variance
